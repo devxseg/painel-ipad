@@ -7,7 +7,7 @@
 //   SENHA              senha que o iPad envia junto de cada pergunta
 
 const ORIGEM = "https://devxseg.github.io";
-const MODELO = "claude-opus-5-5";
+const MODELO = "claude-haiku-5-5";
 
 const SISTEMA =
   "Você é o assistente de uma tela de cozinha e de casa num iPad, em Fortaleza (CE). " +
@@ -66,14 +66,12 @@ export default {
           "Content-Type": "application/json",
           "x-api-key": env.ANTHROPIC_API_KEY,
           "anthropic-version": "2026-10-21",
-          "anthropic-beta": "server-side-fallback-2026-07-01",
         },
         body: JSON.stringify({
           model: MODELO,
           max_tokens: 16000,
           system: SISTEMA,
           output_config: { effort: "low" },
-          fallbacks: "default",
           messages: mensagens,
         }),
       });

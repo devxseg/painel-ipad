@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Bancada">
+<link rel="apple-touch-icon" href="icone.png">
+<title>Bancada</title>
+<!--
+  Feito para o Safari do iOS 9 (iPad mini 1): só JavaScript ES5, XMLHttpRequest,
+  sem variáveis CSS, sem grid e sem gap em flexbox.
+-->
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-user-select: none; -webkit-touch-callout: none; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+body { color: #f2efe8; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 300; }
+button { font-family: inherit; color: inherit; background: #1c1c1e; border: 0; border-radius: 14px; font-size: 22px; font-weight: 400; padding: 14px 18px; cursor: pointer; }
+button.prim { background: #f2a33a; color: #1a1205; }
+button.alerta { background: #e5483b; color: #fff; }
+
+.vista { position: absolute; top: 0; left: 0; right: 0; bottom: 64px; display: none; }
+.vista.ativa { display: block; }
+
+/* Barra de navegação */
+.nav { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; text-align: center; padding-top: 8px; }
+.nav button { background: transparent; color: #6f6c66; font-size: 18px; padding: 10px 22px; margin: 0 6px; }
+.nav button.ativa { color: #f2efe8; background: #1c1c1e; }
+
+/* Relógio */
+.rel { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 0 4vw; }
+.rel-esq { -webkit-flex: 1.45; flex: 1.45; }
+.rel-dir { -webkit-flex: 1; flex: 1; padding-left: 4vw; border-left: 1px solid #262626; }
+.hora { font-size: 19vw; font-weight: 100; line-height: .9; letter-spacing: -.02em; white-space: nowrap; }
+.hora .seg { font-size: 4vw; color: #6f6c66; margin-left: .6vw; letter-spacing: 0; }
+.data { font-size: 3.2vw; color: #b8b3a8; margin-top: 2vw; }
+.temp { font-size: 9vw; font-weight: 200; line-height: 1; }
+.temp .ic { font-size: 5vw; margin-right: 1.2vw; vertical-align: .9vw; }
+.cond { font-size: 2.6vw; margin-top: 1vw; }
+.minmax { font-size: 2vw; color: #b8b3a8; margin-top: .8vw; }
+.horas { margin-top: 3vw; white-space: nowrap; }
+.h1 { display: inline-block; width: 16%; text-align: center; font-size: 1.7vw; color: #b8b3a8; }
+.h1 b { display: block; font-weight: 400; color: #f2efe8; font-size: 2.1vw; margin: .5vw 0; }
+.h1 .ic { display: block; font-size: 2.4vw; margin: .3vw 0; }
+.att { font-size: 1.4vw; color: #55524d; margin-top: 2.2vw; }
+
+/* Chip de timer em andamento */
+.chip { position: absolute; top: 14px; right: 16px; z-index: 5; background: #2a2219; color: #f2a33a; border-radius: 999px; padding: 10px 18px; font-size: 22px; font-weight: 400; display: none; }
+.chip.on { display: block; }
+.chip.fim { background: #e5483b; color: #fff; }
+
+/* Timer e cronômetro */
+.tm { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: -webkit-flex; display: flex; padding: 3vw 2vw 0; }
+.tm-col { -webkit-flex: 1; flex: 1; margin: 0 1vw; background: #111; border-radius: 22px; padding: 2.4vw; text-align: center; position: relative; }
+.tm-tit { font-size: 2vw; color: #b8b3a8; text-transform: uppercase; letter-spacing: .12em; }
+.tm-num { font-size: 10vw; font-weight: 100; margin: 2vw 0 1.4vw; white-space: nowrap; }
+.tm-num small { font-size: 5vw; color: #6f6c66; }
+.linha { margin-top: 1.2vw; }
+.linha button { margin: .5vw; min-width: 8vw; }
+.linha button.grande { min-width: 15vw; font-size: 26px; padding: 18px 22px; }
+.tm-col.tocando { background: #3a1210; }
+
+/* Receitas */
+.rc { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding: 3vw 4vw; }
+.rc-tit { font-size: 3.4vw; font-weight: 200; margin: 0 0 2vw; }
+.cartao { display: inline-block; vertical-align: top; width: 47%; margin: 0 2% 2vw 0; background: #111; border-radius: 18px; padding: 2.4vw; }
+.cartao h3 { margin: 0; font-size: 2.8vw; font-weight: 400; }
+.cartao p { margin: .8vw 0 0; color: #b8b3a8; font-size: 1.8vw; }
+.det { display: none; }
+.det.on { display: block; }
+.det-top { margin-bottom: 2vw; }
+.det-top button { margin-right: 1.4vw; vertical-align: middle; }
+.det-top h2 { display: inline-block; vertical-align: middle; margin: 0; font-size: 3.6vw; font-weight: 300; }
+.det-meta { color: #b8b3a8; font-size: 1.9vw; margin: 1vw 0 0; }
+.cols { display: -webkit-flex; display: flex; }
+.ingr { -webkit-flex: 1; flex: 1; padding-right: 3vw; }
+.pass { -webkit-flex: 1.6; flex: 1.6; }
+.sub { font-size: 1.7vw; color: #b8b3a8; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 1.2vw; }
+.ingr li { font-size: 2.3vw; line-height: 1.35; margin-bottom: 1vw; }
+.passo { background: #111; border-radius: 16px; padding: 1.6vw 2vw; margin-bottom: 1.2vw; font-size: 2.4vw; line-height: 1.35; }
+.passo .n { color: #f2a33a; font-weight: 400; margin-right: .8vw; }
+.passo.feito { opacity: .4; }
+.passo button { display: block; margin-top: 1vw; font-size: 20px; padding: 10px 16px; }
+
+/* Modo noturno: vermelho escuro, como as telas de cabeceira */
+body.noite #v-relogio { color: #8f2a22; }
+body.noite .data, body.noite .minmax, body.noite .h1, body.noite .cond { color: #6e2019; }
+body.noite .h1 b, body.noite .hora .seg { color: #8f2a22; }
+body.noite .rel-dir { border-color: #2a0d0a; }
+body.noite .nav button { color: #4a1612; }
+body.noite .nav button.ativa { color: #8f2a22; background: #140605; }
+
+@media (orientation: portrait) {
+  .rel { display: block; padding-top: 8vh; }
+  .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
+  .hora { font-size: 26vw; }
+  .data { font-size: 4.4vw; }
+  .temp { font-size: 13vw; } .temp .ic { font-size: 7vw; }
+  .cond { font-size: 4vw; } .minmax { font-size: 3vw; }
+  .h1 { font-size: 2.6vw; } .h1 b { font-size: 3.2vw; } .h1 .ic { font-size: 3.6vw; }
+  .att { font-size: 2.2vw; }
+  .tm { display: block; }
+  .tm-col { margin: 0 0 2vw; }
+  .tm-num { font-size: 16vw; } .tm-tit { font-size: 3vw; }
+  .cartao { width: 100%; } .cartao h3 { font-size: 4.4vw; } .cartao p { font-size: 3vw; }
+  .rc-tit { font-size: 5vw; } .det-top h2 { font-size: 5vw; } .det-meta { font-size: 3vw; }
+  .cols { display: block; } .ingr { padding: 0 0 3vw; }
+  .ingr li { font-size: 3.4vw; } .passo { font-size: 3.5vw; } .sub { font-size: 2.6vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="chip" id="chip">⏱ <span id="chip-t">0:00</span></div>
+
+<section class="vista ativa" id="v-relogio">
+  <div class="rel">
+    <div class="rel-esq">
+      <div class="hora"><span id="hm">--:--</span><span class="seg" id="ss"></span></div>
+      <div class="data" id="data"></div>
+    </div>
+    <div class="rel-dir">
+      <div class="temp"><span class="ic" id="w-ic"></span><span id="w-temp">--°</span></div>
+      <div class="cond" id="w-cond">Carregando previsão…</div>
+      <div class="minmax" id="w-mm"></div>
+      <div class="horas" id="w-horas"></div>
+      <div class="att" id="w-att">Fortaleza</div>
+    </div>
+  </div>
+</section>
+
+<section class="vista" id="v-timer">
+  <div class="tm">
+    <div class="tm-col" id="col-timer">
+      <div class="tm-tit">Timer</div>
+      <div class="tm-num" id="t-num">5:00</div>
+      <div class="linha" id="t-presets"></div>
+      <div class="linha">
+        <button id="t-menos">− 1 min</button>
+        <button id="t-mais">+ 1 min</button>
+      </div>
+      <div class="linha">
+        <button class="prim grande" id="t-go">Iniciar</button>
+        <button class="grande" id="t-zera">Zerar</button>
+      </div>
+    </div>
+    <div class="tm-col">
+      <div class="tm-tit">Cronômetro</div>
+      <div class="tm-num" id="c-num">0:00<small>.0</small></div>
+      <div class="linha" style="margin-top: 9vw">
+        <button class="prim grande" id="c-go">Iniciar</button>
+        <button class="grande" id="c-zera">Zerar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="vista" id="v-receitas">
+  <div class="rc" id="rc">
+    <div id="lista">
+      <h2 class="rc-tit">Receitas</h2>
+      <div id="cartoes"></div>
+    </div>
+    <div class="det" id="det">
+      <div class="det-top"><button id="voltar">‹ Receitas</button><h2 id="d-nome"></h2></div>
+      <p class="det-meta" id="d-meta"></p>
+      <div class="cols" style="margin-top: 2.4vw">
+        <div class="ingr"><p class="sub">Ingredientes</p><ul id="d-ingr" style="padding-left: 1.2em; margin: 0"></ul></div>
+        <div class="pass"><p class="sub">Modo de preparo · toque no passo para marcar</p><div id="d-pass"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="nav">
+  <button class="ativa" data-v="v-relogio">Relógio</button>
+  <button data-v="v-timer">Timer</button>
+  <button data-v="v-receitas">Receitas</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var DIAS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+  var MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+  function $(id) { return document.getElementById(id); }
+  function dois(n) { return (n < 10 ? '0' : '') + n; }
+  function mmss(ms) {
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+    return (h ? h + ':' + dois(m) : m) + ':' + dois(r);
+  }
+
+  // Toque rápido (sem o atraso de 300 ms do iOS antigo), cancelado se o dedo arrastar
+  function toque(el, fn) {
+    var x = 0, y = 0, mexeu = false, viaToque = false;
+    el.addEventListener('touchstart', function (e) { var t = e.touches[0]; x = t.clientX; y = t.clientY; mexeu = false; }, false);
+    el.addEventListener('touchmove', function (e) { var t = e.touches[0]; if (Math.abs(t.clientX - x) > 10 || Math.abs(t.clientY - y) > 10) mexeu = true; }, false);
+    el.addEventListener('touchend', function (e) { if (mexeu) return; e.preventDefault(); viaToque = true; fn(e); }, false);
+    el.addEventListener('click', function (e) { if (viaToque) { viaToque = false; return; } fn(e); }, false);
+  }
+
+  // ---------- Som (precisa de um toque para liberar no iOS) ----------
+  var ctx = null;
+  function liberarSom() {
+    if (ctx) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try {
+      ctx = new AC();
+      var b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource();
+      s.buffer = b; s.connect(ctx.destination); s.start ? s.start(0) : s.noteOn(0);
+    } catch (e) { ctx = null; }
+  }
+  document.addEventListener('touchend', liberarSom, false);
+  document.addEventListener('click', liberarSom, false);
+  function bip() {
+    if (!ctx) return;
+    try {
+      var o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
+      o.frequency.value = 880; o.type = 'sine';
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.6, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      o.connect(g); g.connect(ctx.destination);
+      o.start ? o.start(t) : o.noteOn(t);
+      o.stop ? o.stop(t + 0.4) : o.noteOff(t + 0.4);
+    } catch (e) {}
+  }
+
+  // ---------- Navegação ----------
+  var vistaAtual = 'v-relogio';
+  var navBtns = document.querySelectorAll('.nav button');
+  function irPara(id) {
+    vistaAtual = id;
+    var vs = document.querySelectorAll('.vista');
+    for (var i = 0; i < vs.length; i++) vs[i].classList.toggle('ativa', vs[i].id === id);
+    for (var j = 0; j < navBtns.length; j++) navBtns[j].classList.toggle('ativa', navBtns[j].getAttribute('data-v') === id);
+    atualizarChip();
+  }
+  for (var k = 0; k < navBtns.length; k++) {
+    (function (b) { toque(b, function () { irPara(b.getAttribute('data-v')); }); })(navBtns[k]);
+  }
+
+  // ---------- Relógio ----------
+  function relogio() {
+    var d = new Date(), h = d.getHours();
+    $('hm').textContent = h + ':' + dois(d.getMinutes());
+    $('ss').textContent = dois(d.getSeconds());
+    $('data').textContent = DIAS[d.getDay()] + ', ' + d.getDate() + ' de ' + MESES[d.getMonth()];
+    document.body.classList.toggle('noite', h >= 22 || h < 6);
+  }
+
+  // ---------- Previsão do tempo (arquivo gerado de hora em hora pelo GitHub) ----------
+  var COND = {
+    0: ['Céu limpo', 'sol'], 1: ['Predomínio de sol', 'sol'], 2: ['Parcialmente nublado', 'parc'], 3: ['Nublado', 'nuvem'],
+    45: ['Neblina', 'nuvem'], 48: ['Neblina', 'nuvem'],
+    51: ['Garoa fraca', 'chuva'], 53: ['Garoa', 'chuva'], 55: ['Garoa forte', 'chuva'], 56: ['Garoa', 'chuva'], 57: ['Garoa', 'chuva'],
+    61: ['Chuva fraca', 'chuva'], 63: ['Chuva', 'chuva'], 65: ['Chuva forte', 'chuva'], 66: ['Chuva', 'chuva'], 67: ['Chuva forte', 'chuva'],
+    80: ['Pancadas fracas', 'chuva'], 81: ['Pancadas de chuva', 'chuva'], 82: ['Pancadas fortes', 'chuva'],
+    95: ['Trovoadas', 'raio'], 96: ['Trovoadas com granizo', 'raio'], 99: ['Trovoadas com granizo', 'raio']
+  };
+  function icone(code, dia) {
+    var t = (COND[code] || ['', 'nuvem'])[1];
+    if (t === 'sol') return dia ? '☀︎' : '☾︎';
+    if (t === 'parc') return dia ? '⛅︎' : '☁︎';
+    if (t === 'chuva') return '☂︎';
+    if (t === 'raio') return '⚡︎';
+    return '☁︎';
+  }
+  function horaLocal(iso) { return parseInt(iso.substr(11, 2), 10); }
+
+  function mostrarTempo(w) {
+    var c = w.current, dd = w.daily, hh = w.hourly;
+    var dia = c.is_day === 1;
+    $('w-ic').textContent = icone(c.weather_code, dia);
+    $('w-temp').textContent = Math.round(c.temperature_2m) + '°';
+    $('w-cond').textContent = (COND[c.weather_code] || ['—'])[0] + ' · sensação ' + Math.round(c.apparent_temperature) + '°';
+    $('w-mm').textContent = 'Máx ' + Math.round(dd.temperature_2m_max[0]) + '°  ·  Mín ' + Math.round(dd.temperature_2m_min[0]) +
+      '°  ·  Chuva ' + (dd.precipitation_probability_max[0] == null ? '—' : dd.precipitation_probability_max[0] + '%');
+
+    var alvo = c.time.substr(0, 13) + ':00', i = hh.time.indexOf(alvo), box = $('w-horas');
+    box.innerHTML = '';
+    if (i >= 0) {
+      for (var n = 1; n <= 6 && i + n < hh.time.length; n++) {
+        var j = i + n, h = horaLocal(hh.time[j]), el = document.createElement('div');
+        el.className = 'h1';
+        var s1 = document.createElement('span'); s1.textContent = h + 'h';
+        var s2 = document.createElement('span'); s2.className = 'ic'; s2.textContent = icone(hh.weather_code[j], h >= 6 && h < 18);
+        var s3 = document.createElement('b'); s3.textContent = Math.round(hh.temperature_2m[j]) + '°';
+        var s4 = document.createElement('span'); s4.textContent = hh.precipitation_probability[j] == null ? '' : hh.precipitation_probability[j] + '%';
+        el.appendChild(s1); el.appendChild(s2); el.appendChild(s3); el.appendChild(s4);
+        box.appendChild(el);
+      }
+    }
+    // c.time é a hora local de Fortaleza (UTC−3), no formato AAAA-MM-DDTHH:MM
+    var p = c.time.match(/\d+/g);
+    var quando = Date.UTC(+p[0], +p[1] - 1, +p[2], +p[3] + 3, +p[4]);
+    var idadeH = (Date.now() - quando) / 3600000;
+    $('w-att').textContent = 'Fortaleza · atualizado às ' + c.time.substr(11, 5) + (idadeH > 3 ? ' · previsão atrasada' : '');
+  }
+
+  function buscarTempo() {
+    var x = new XMLHttpRequest();
+    x.open('GET', 'weather.json?t=' + Date.now(), true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      if (x.status === 200) {
+        try { mostrarTempo(JSON.parse(x.responseText)); return; } catch (e) {}
+      }
+      if ($('w-temp').textContent === '--°') $('w-cond').textContent = 'Previsão indisponível no momento';
+    };
+    x.send();
+  }
+
+  // ---------- Timer ----------
+  var tDur = 5 * 60000, tFim = 0, tResta = tDur, tRodando = false, tTocando = false, tBipTimer = null;
+  function tMostrar() {
+    var r = tRodando ? tFim - Date.now() : tResta;
+    $('t-num').textContent = mmss(r);
+    $('t-go').textContent = tTocando ? 'Parar alarme' : (tRodando ? 'Pausar' : 'Iniciar');
+    $('t-go').className = 'grande ' + (tTocando ? 'alerta' : 'prim');
+  }
+  function tDefinir(ms) {
+    if (tTocando) tPararAlarme();
+    tRodando = false; tDur = tResta = Math.max(0, ms); tMostrar(); atualizarChip();
+  }
+  function tIniciar() {
+    if (tResta <= 0) return;
+    tFim = Date.now() + tResta; tRodando = true; tMostrar(); atualizarChip();
+  }
+  function tPararAlarme() {
+    tTocando = false; clearInterval(tBipTimer);
+    $('col-timer').classList.remove('tocando');
+    $('chip').classList.remove('fim');
+    tResta = tDur; tMostrar(); atualizarChip();
+  }
+  function tTick() {
+    if (!tRodando) return;
+    if (Date.now() >= tFim) {
+      tRodando = false; tResta = 0; tTocando = true;
+      $('col-timer').classList.add('tocando');
+      $('chip').classList.add('fim');
+      bip(); tBipTimer = setInterval(bip, 700);
+      setTimeout(function () { if (tTocando) tPararAlarme(); }, 60000);
+    }
+    tMostrar(); atualizarChip();
+  }
+  toque($('t-go'), function () {
+    if (tTocando) return tPararAlarme();
+    if (tRodando) { tResta = tFim - Date.now(); tRodando = false; tMostrar(); atualizarChip(); }
+    else tIniciar();
+  });
+  toque($('t-zera'), function () { tDefinir(tDur); });
+  toque($('t-mais'), function () {
+    if (tRodando) { tFim += 60000; tDur += 60000; } else tDefinir((tRodando ? tFim - Date.now() : tResta) + 60000);
+    tMostrar();
+  });
+  toque($('t-menos'), function () {
+    if (tRodando) { tFim = Math.max(Date.now() + 1000, tFim - 60000); } else tDefinir(Math.max(60000, tResta - 60000));
+    tMostrar();
+  });
+  [1, 3, 5, 10, 15, 30].forEach(function (m) {
+    var b = document.createElement('button');
+    b.textContent = m + ' min';
+    toque(b, function () { tDefinir(m * 60000); });
+    $('t-presets').appendChild(b);
+  });
+
+  function atualizarChip() {
+    var chip = $('chip');
+    var mostrar = (tRodando || tTocando) && vistaAtual !== 'v-timer';
+    chip.classList.toggle('on', mostrar);
+    if (mostrar) $('chip-t').textContent = tTocando ? 'Tempo esgotado' : mmss(tFim - Date.now());
+  }
+  toque($('chip'), function () { if (tTocando) tPararAlarme(); irPara('v-timer'); });
+
+  // ---------- Cronômetro ----------
+  var cIni = 0, cAcum = 0, cRodando = false;
+  function cMostrar() {
+    var ms = cAcum + (cRodando ? Date.now() - cIni : 0);
+    var s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    $('c-num').innerHTML = (h ? h + ':' + dois(m) : m) + ':' + dois(s % 60) + '<small>.' + Math.floor((ms % 1000) / 100) + '</small>';
+    $('c-go').textContent = cRodando ? 'Pausar' : (cAcum ? 'Continuar' : 'Iniciar');
+  }
+  toque($('c-go'), function () {
+    if (cRodando) { cAcum += Date.now() - cIni; cRodando = false; }
+    else { cIni = Date.now(); cRodando = true; }
+    cMostrar();
+  });
+  toque($('c-zera'), function () { cRodando = false; cAcum = 0; cMostrar(); });
+
+  // ---------- Receitas ----------
+  var receitas = [];
+  function abrirReceita(r) {
+    $('d-nome').textContent = r.nome;
+    $('d-meta').textContent = [r.tempo, r.rende].filter(Boolean).join(' · ');
+    var ul = $('d-ingr'); ul.innerHTML = '';
+    (r.ingredientes || []).forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    var box = $('d-pass'); box.innerHTML = '';
+    (r.passos || []).forEach(function (p, i) {
+      var d = document.createElement('div'); d.className = 'passo';
+      var n = document.createElement('span'); n.className = 'n'; n.textContent = (i + 1) + '.';
+      d.appendChild(n); d.appendChild(document.createTextNode(p.texto));
+      toque(d, function () { d.classList.toggle('feito'); });
+      if (p.min) {
+        var b = document.createElement('button'); b.className = 'prim';
+        b.textContent = '⏱ Iniciar timer de ' + p.min + ' min';
+        toque(b, function (e) { if (e && e.stopPropagation) e.stopPropagation(); tDefinir(p.min * 60000); tIniciar(); });
+        b.addEventListener('touchend', function (e) { e.stopPropagation(); }, false);
+        d.appendChild(b);
+      }
+      box.appendChild(d);
+    });
+    $('lista').style.display = 'none';
+    $('det').classList.add('on');
+    $('rc').scrollTop = 0;
+  }
+  toque($('voltar'), function () { $('det').classList.remove('on'); $('lista').style.display = ''; $('rc').scrollTop = 0; });
+
+  function montarLista() {
+    var box = $('cartoes'); box.innerHTML = '';
+    receitas.forEach(function (r) {
+      var c = document.createElement('div'); c.className = 'cartao';
+      var h = document.createElement('h3'); h.textContent = r.nome;
+      var p = document.createElement('p'); p.textContent = [r.tempo, r.rende].filter(Boolean).join(' · ');
+      c.appendChild(h); c.appendChild(p);
+      toque(c, function () { abrirReceita(r); });
+      box.appendChild(c);
+    });
+  }
+  function buscarReceitas() {
+    var x = new XMLHttpRequest();
+    x.open('GET', 'recipes.json?t=' + Date.now(), true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      try { receitas = JSON.parse(x.responseText); montarLista(); }
+      catch (e) { $('cartoes').textContent = 'Não foi possível carregar as receitas.'; }
+    };
+    x.send();
+  }
+
+  // Impede a página inteira de "quicar" ao arrastar, exceto na lista de receitas
+  document.addEventListener('touchmove', function (e) {
+    var el = e.target;
+    while (el && el !== document.body) { if (el.id === 'rc') return; el = el.parentNode; }
+    e.preventDefault();
+  }, false);
+
+  // ---------- Laços ----------
+  relogio(); tMostrar(); cMostrar(); buscarTempo(); buscarReceitas();
+  setInterval(relogio, 1000);
+  setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
+  setInterval(buscarTempo, 15 * 60000);
+  // Recarrega a página a cada 6 h (pega receitas e melhorias novas), só se nada estiver em uso
+  setInterval(function () {
+    if (!tRodando && !tTocando && !cRodando && vistaAtual === 'v-relogio') location.reload();
+  }, 6 * 3600000);
+})();
+</script>
+</body>
+</html>

@@ -91,7 +91,28 @@ body.noite .rel-dir { border-color: #2a0d0a; }
 body.noite .nav button { color: #4a1612; }
 body.noite .nav button.ativa { color: #8f2a22; background: #140605; }
 
+/* Claude */
+.cl { position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 2.4vw 4vw 0; }
+.cl-topo { white-space: nowrap; }
+.cl-topo h2 { display: inline-block; margin: 0 2vw 0 0; font-size: 3.4vw; font-weight: 200; vertical-align: middle; }
+.cl-topo button { vertical-align: middle; font-size: 18px; padding: 10px 16px; margin-right: 8px; }
+.cl-entrada { margin-top: 1.6vw; white-space: nowrap; }
+textarea, input { -webkit-user-select: text; user-select: text; font-family: inherit; font-size: 22px; color: #f2efe8; background: #1c1c1e; border: 1px solid #333; border-radius: 14px; padding: 12px 14px; outline: none; -webkit-appearance: none; }
+.cl-entrada textarea { width: 76%; height: 92px; vertical-align: top; resize: none; white-space: normal; }
+.cl-entrada button { width: 22%; height: 92px; margin-left: 1.4%; vertical-align: top; }
+.cl-resp { position: absolute; top: 19vw; left: 4vw; right: 4vw; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 2vw; }
+.cl-msg { margin-bottom: 1.6vw; font-size: 22px; line-height: 1.45; white-space: pre-wrap; -webkit-user-select: text; }
+.cl-msg.eu { color: #b8b3a8; }
+.cl-msg.eu:before { content: "Você: "; color: #6f6c66; }
+.cl-msg.ia { background: #111; border-radius: 16px; padding: 1.6vw 2vw; }
+.cl-msg.erro { color: #e5483b; }
+.cl-dica { color: #6f6c66; font-size: 20px; line-height: 1.5; }
+.cl-senha { margin-top: 2vw; }
+.cl-senha input { width: 40%; margin-right: 10px; }
+
 @media (orientation: portrait) {
+  .cl-resp { top: 30vw; }
+  .cl-topo h2 { font-size: 5vw; }
   .rel { display: block; padding-top: 8vh; }
   .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
   .hora { font-size: 26vw; }
@@ -173,10 +194,32 @@ body.noite .nav button.ativa { color: #8f2a22; background: #140605; }
   </div>
 </section>
 
+<section class="vista" id="v-claude">
+  <div class="cl">
+    <div class="cl-topo">
+      <h2>Perguntar ao Claude</h2>
+      <button id="cl-nova">Nova conversa</button>
+      <button id="cl-trocar">Trocar senha</button>
+    </div>
+    <div id="cl-config" class="cl-senha" style="display: none">
+      <p class="cl-dica" id="cl-config-msg">Digite a senha do assistente. Ela fica salva só neste iPad.</p>
+      <input type="password" id="cl-senha" autocomplete="off" autocapitalize="off" autocorrect="off" placeholder="Senha">
+      <button class="prim" id="cl-salvar">Salvar</button>
+    </div>
+    <div class="cl-entrada" id="cl-entrada">
+      <textarea id="cl-pergunta" placeholder="Ex.: dá para trocar leite por água no bolo de cenoura?"></textarea><button class="prim" id="cl-enviar">Perguntar</button>
+    </div>
+    <div class="cl-resp" id="cl-resp">
+      <p class="cl-dica" id="cl-vazio">Escreva ou dite (microfone do teclado) uma pergunta e toque em Perguntar. A resposta aparece aqui.</p>
+    </div>
+  </div>
+</section>
+
 <div class="nav">
   <button class="ativa" data-v="v-relogio">Relógio</button>
   <button data-v="v-timer">Timer</button>
   <button data-v="v-receitas">Receitas</button>
+  <button data-v="v-claude">Claude</button>
 </div>
 
 <script>
@@ -446,9 +489,84 @@ body.noite .nav button.ativa { color: #8f2a22; background: #140605; }
   // Impede a página inteira de "quicar" ao arrastar, exceto na lista de receitas
   document.addEventListener('touchmove', function (e) {
     var el = e.target;
-    while (el && el !== document.body) { if (el.id === 'rc') return; el = el.parentNode; }
+    while (el && el !== document.body) { if (el.id === 'rc' || el.id === 'cl-resp' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
     e.preventDefault();
   }, false);
+
+  // ---------- Claude (via intermediário no Cloudflare; endereço em config.json) ----------
+  var clUrl = '', clHist = [], clOcupado = false;
+  function lerSenha() { try { return localStorage.getItem('bancada-senha') || ''; } catch (e) { return ''; } }
+  function gravarSenha(s) { try { localStorage.setItem('bancada-senha', s); } catch (e) {} }
+  function clMostrarConfig(on, msg) {
+    $('cl-config').style.display = on ? '' : 'none';
+    $('cl-entrada').style.display = on ? 'none' : '';
+    if (msg) $('cl-config-msg').textContent = msg;
+  }
+  function clAdd(classe, texto) {
+    var v = $('cl-vazio'); if (v) v.parentNode.removeChild(v);
+    var p = document.createElement('div'); p.className = 'cl-msg ' + classe; p.textContent = texto;
+    $('cl-resp').appendChild(p);
+    $('cl-resp').scrollTop = $('cl-resp').scrollHeight;
+    return p;
+  }
+  function clEnviar() {
+    var q = $('cl-pergunta').value.replace(/^\s+|\s+$/g, '');
+    if (!q || clOcupado) return;
+    if (!clUrl) { clAdd('erro', 'O assistente ainda não foi configurado (falta o endereço em config.json).'); return; }
+    if (!lerSenha()) { clMostrarConfig(true); return; }
+    clOcupado = true;
+    $('cl-pergunta').blur();
+    clAdd('eu', q);
+    var esperando = clAdd('ia', 'Pensando…');
+    $('cl-enviar').textContent = 'Aguarde…';
+    var x = new XMLHttpRequest();
+    x.open('POST', clUrl, true);
+    x.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+    x.timeout = 90000;
+    function fim(texto, erro) {
+      clOcupado = false;
+      $('cl-enviar').textContent = 'Perguntar';
+      esperando.textContent = texto;
+      esperando.className = 'cl-msg ' + (erro ? 'erro' : 'ia');
+      $('cl-resp').scrollTop = $('cl-resp').scrollHeight;
+    }
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      var d = null;
+      try { d = JSON.parse(x.responseText); } catch (e) {}
+      if (x.status === 401) { gravarSenha(''); clMostrarConfig(true, 'Senha incorreta. Digite de novo.'); return fim('Senha incorreta.', true); }
+      if (d && d.resposta) {
+        clHist.push({ p: q, r: d.resposta }); if (clHist.length > 3) clHist.shift();
+        $('cl-pergunta').value = '';
+        return fim(d.resposta, false);
+      }
+      fim((d && d.erro) || (x.status === 0 ? 'Sem conexão com o assistente. Confira a internet do iPad.' : 'Erro ' + x.status + '.'), true);
+    };
+    x.ontimeout = function () { fim('Demorou demais. Tente de novo.', true); };
+    x.send(JSON.stringify({ senha: lerSenha(), pergunta: q, historico: clHist }));
+  }
+  toque($('cl-enviar'), clEnviar);
+  toque($('cl-nova'), function () {
+    clHist = []; $('cl-resp').innerHTML = ''; $('cl-pergunta').value = '';
+    var p = document.createElement('p'); p.className = 'cl-dica'; p.id = 'cl-vazio';
+    p.textContent = 'Nova conversa. Escreva uma pergunta e toque em Perguntar.';
+    $('cl-resp').appendChild(p);
+  });
+  toque($('cl-trocar'), function () { clMostrarConfig(true, 'Digite a nova senha.'); });
+  toque($('cl-salvar'), function () {
+    var s = $('cl-senha').value; if (!s) return;
+    gravarSenha(s); $('cl-senha').value = ''; $('cl-senha').blur(); clMostrarConfig(false);
+  });
+  (function () {
+    var x = new XMLHttpRequest();
+    x.open('GET', 'config.json?t=' + Date.now(), true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      try { clUrl = JSON.parse(x.responseText).claudeUrl || ''; } catch (e) {}
+    };
+    x.send();
+    if (!lerSenha()) clMostrarConfig(true);
+  })();
 
   // ---------- Laços ----------
   relogio(); tMostrar(); cMostrar(); buscarTempo(); buscarReceitas();

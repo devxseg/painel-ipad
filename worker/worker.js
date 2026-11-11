@@ -1,13 +1,17 @@
-// Intermediário entre a tela Bancada (iPad) e a API do Claude.
-// Roda no Cloudflare Workers (plano gratuito). A chave da API fica guardada
-// no Cloudflare como segredo e nunca vai para o iPad nem para o GitHub.
+// Intermediário entre a tela Bancada (iPad) e uma IA.
+// Roda no Cloudflare Workers (plano gratuito).
+//
+// Padrão gratuito: Cloudflare Workers AI (modelo Llama 4 Scout), sem chave.
+//   No Worker: Settings → Bindings → Add → Workers AI, com o nome AI.
+// Opcional, pago: se o segredo ANTHROPIC_API_KEY existir, usa o Claude Haiku 5.5.
 //
 // Segredos a cadastrar no Worker (Settings → Variables and Secrets):
-//   ANTHROPIC_API_KEY  chave criada em console.anthropic.com
-//   SENHA              senha que o iPad envia junto de cada pergunta
+//   SENHA              senha que o iPad envia junto de cada pergunta (obrigatório)
+//   ANTHROPIC_API_KEY  chave de console.anthropic.com (opcional)
 
 const ORIGEM = "https://devxseg.github.io";
 const MODELO = "claude-haiku-5-5";
+const MODELO_GRATIS = "@cf/meta/llama-4-scout-17b-16e-instruct";
 
 const SISTEMA =
   "Você é o assistente de uma tela de cozinha e de casa num iPad, em Fortaleza (CE). " +
@@ -57,6 +61,8 @@ export default {
       }
     }
     mensagens.push({ role: "user", content: pergunta });
+
+    if (!env.ANTHROPIC_API_KEY) return perguntarWorkersAI(env, mensagens);
 
     let r;
     try {
@@ -109,3 +115,30 @@ export default {
     return responder({ resposta: texto });
   },
 };
+
+// Workers AI: plano gratuito com cota diária (zera à 00:00 UTC, 21h em Fortaleza).
+async function perguntarWorkersAI(env, mensagens) {
+  if (!env.AI) {
+    return responder({ erro: "Falta ligar o Workers AI no Worker (Settings → Bindings → Workers AI, nome AI)." }, 500);
+  }
+  let saida;
+  try {
+    saida = await env.AI.run(MODELO_GRATIS, {
+      messages: [{ role: "system", content: SISTEMA }].concat(mensagens),
+      max_tokens: 900,
+    });
+  } catch (e) {
+    const msg = String((e && e.message) || e);
+    if (/limit|quota|neuron|429|exceeded/i.test(msg)) {
+      return responder({ erro: "Acabou a cota gratuita de hoje. Ela volta às 21h (horário de Fortaleza)." }, 429);
+    }
+    return responder({ erro: "A IA está indisponível agora. Tente de novo em instantes." }, 502);
+  }
+  let texto = "";
+  if (saida && typeof saida.response === "string") texto = saida.response;
+  else if (saida && saida.choices && saida.choices[0] && saida.choices[0].message) texto = saida.choices[0].message.content || "";
+  else if (saida && typeof saida.output_text === "string") texto = saida.output_text;
+  texto = String(texto).replace(/\*\*/g, "").replace(/^#+\s*/gm, "").trim();
+  if (!texto) return responder({ erro: "A IA não devolveu texto. Tente reformular." }, 200);
+  return responder({ resposta: texto });
+}

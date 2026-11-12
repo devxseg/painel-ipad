@@ -17,6 +17,8 @@
  */
 var CHAVE = 'TROQUE-ESTA-CHAVE';
 var FUSO = 'America/Fortaleza';
+// Frentes que aparecem na tela. Para ver tudo: ['Pessoal', 'XSEG', 'NEXACORE', 'TAP'].
+var FRENTES = ['Pessoal'];
 
 function doGet(e) {
   var p = (e && e.parameter) || {};
@@ -43,9 +45,12 @@ function doGet(e) {
     var minutos = (ev.getEndTime().getTime() - ev.getStartTime().getTime()) / 60000;
     if (hora === '08:00' && minutos === 15) hora = ''; // tarefa sem hora marcada
 
+    var frente = campo_(desc, 'Frente') || 'Pessoal';
+    if (FRENTES.indexOf(frente) < 0) return;
+
     tarefas.push({
       titulo: titulo.replace(/^❗️?\s*/, '').replace(/^\[(XSEG|NEXACORE|TAP)\]\s*/, ''),
-      frente: campo_(desc, 'Frente') || 'Pessoal',
+      frente: frente,
       prioridade: campo_(desc, 'Prioridade') || 'Média',
       dia: dia,
       hora: hora,

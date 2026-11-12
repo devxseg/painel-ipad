@@ -342,7 +342,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
       tit.appendChild(pt); tit.appendChild(document.createTextNode(t.titulo));
       var meta = document.createElement('span'); meta.className = 'meta';
       var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, r.hoje);
-      meta.appendChild(q); meta.appendChild(document.createTextNode(' · ' + t.frente + ' · ' + t.prioridade));
+      meta.appendChild(q); meta.appendChild(document.createTextNode((t.frente && t.frente !== 'Pessoal' ? ' · ' + t.frente : '') + ' · prioridade ' + (t.prioridade || '').toLowerCase()));
       li.appendChild(tit); li.appendChild(meta); ul.appendChild(li);
     });
     $('tf-mais').textContent = ts.length > max ? '+ ' + (ts.length - max) + ' na lista completa' : '';

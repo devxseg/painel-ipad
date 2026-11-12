@@ -54,7 +54,7 @@ button.alerta { background: #e5483b; color: #fff; }
 .pd h2 { margin: 0; font-size: 3.4vw; font-weight: 200; }
 .pd-res { font-size: 2.2vw; color: #b8b3a8; margin: .6vw 0 0; }
 .pd-res .atr { color: #e5483b; }
-.pd-lista { position: absolute; top: 10vw; left: 4vw; right: 4vw; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 2vw; }
+.pd-lista { position: absolute; top: 16vw; left: 4vw; right: 4vw; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 2vw; }
 .pd-grupo { font-size: 1.7vw; color: #8a857c; text-transform: uppercase; letter-spacing: .12em; margin: 2vw 0 .6vw; }
 .pd-item { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; background: #111; border-radius: 16px; padding: 1.4vw 1.8vw; margin-bottom: 1vw; }
 .pd-txt { -webkit-flex: 1; flex: 1; min-width: 0; padding-right: 1.6vw; }
@@ -103,7 +103,32 @@ button.alerta { background: #e5483b; color: #fff; }
 .alerta-tela.pisca { background: #6a1d16; }
 .alerta-tela h2 { margin: 0; font-size: 6vw; font-weight: 200; color: #fff; }
 .alerta-tela p { font-size: 2.6vw; color: #f2d0c8; margin: 2vw 0 4vw; }
-.alerta-tela button { font-size: 30px; padding: 22px 48px; margin: 0 10px; }
+.alerta-tela button { font-size: 26px; padding: 20px 34px; margin: 8px; }
+/* Pomodoro na tela principal */
+.pomo { display: none; background: #1a140c; border: 1px solid #3a2a12; border-radius: 18px; padding: 1.4vw 1.8vw; margin-bottom: 1.6vw; }
+.pomo.on { display: block; }
+.pomo.pausa { background: #0f1714; border-color: #1f3a2c; }
+.pomo-lbl { font-size: 1.8vw; color: #f2a33a; line-height: 1.3; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.pomo.pausa .pomo-lbl { color: #7fc8a0; }
+.pomo-tempo { font-size: 5.4vw; font-weight: 100; line-height: 1.1; margin: .3vw 0 .6vw; }
+.pomo-btns button { font-size: 17px; padding: 9px 13px; margin: 0 6px 4px 0; }
+.pomo-stats { font-size: 1.5vw; color: #b8b3a8; margin-top: .8vw; }
+/* Escolher atividade e ações da tarefa */
+.sobre { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 25; background: rgba(0,0,0,.92); display: none; padding: 4vw 6vw; }
+.sobre.on { display: block; }
+.sobre h2 { margin: 0 0 1.6vw; font-size: 3.2vw; font-weight: 200; }
+.esc-lista { position: absolute; top: 10vw; left: 6vw; right: 6vw; bottom: 9vw; overflow-y: scroll; -webkit-overflow-scrolling: touch; }
+.esc-item { background: #161616; border-radius: 14px; padding: 1.6vw 2vw; margin-bottom: 1vw; font-size: 2.3vw; line-height: 1.3; }
+.esc-item small { display: block; font-size: 1.6vw; color: #8a857c; margin-top: .3vw; }
+.esc-item.livre { color: #b8b3a8; }
+.esc-rodape { position: absolute; left: 6vw; right: 6vw; bottom: 2vw; text-align: center; }
+.acao-box { max-width: 70%; margin: 14vh auto 0; text-align: center; }
+.acao-box p { font-size: 2.6vw; line-height: 1.35; margin: 0 0 3vw; }
+.acao-box button { display: block; width: 100%; margin: 0 0 1.4vw; font-size: 24px; padding: 18px; }
+.pd-item .pomo-bt { margin-right: 10px; background: #2a2219; color: #f2a33a; }
+.pd-acomp { margin-top: 2.4vw; }
+.pd-acomp-item { font-size: 1.9vw; padding: .7vw 0; border-top: 1px solid #1f1f1f; }
+.pd-acomp-item b { color: #f2a33a; font-weight: 400; margin-right: 1vw; }
 
 /* Modo noturno: vermelho escuro, como as telas de cabeceira */
 body.noite #v-relogio { color: #8f2a22; }
@@ -141,7 +166,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   .rel { display: block; padding-top: 4vh; }
   .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
   .hora { font-size: 24vw; }
-  .pd h2 { font-size: 5vw; } .pd-res { font-size: 3.2vw; } .pd-lista { top: 15vw; }
+  .pd h2 { font-size: 5vw; } .pd-res { font-size: 3.2vw; } .pd-lista { top: 23vw; }
   .pd-tit { font-size: 3.4vw; } .pd-meta, .pd-nota { font-size: 2.4vw; } .pd-grupo { font-size: 2.5vw; }
   .data { font-size: 4.4vw; }
   .tf-topo { font-size: 2.6vw; } .tf-res { font-size: 3.6vw; }
@@ -152,6 +177,9 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   .tm-col { margin: 0 0 2vw; }
   .tm-num, .al-hora { font-size: 12vw !important; } .tm-fase, .al-est, .al-chip { font-size: 2.8vw; }
   .alerta-tela h2 { font-size: 9vw; } .alerta-tela p { font-size: 3.6vw; }
+  .pomo-lbl { font-size: 2.8vw; } .pomo-tempo { font-size: 9vw; } .pomo-stats { font-size: 2.3vw; }
+  .sobre h2 { font-size: 4.6vw; } .esc-lista { top: 14vw; } .esc-item { font-size: 3.4vw; } .esc-item small { font-size: 2.4vw; }
+  .acao-box { max-width: 88%; } .acao-box p { font-size: 3.8vw; } .pd-acomp-item { font-size: 2.9vw; }
   .tm-num { font-size: 16vw; } .tm-tit { font-size: 3vw; }
 }
 </style>
@@ -163,7 +191,22 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
 <div class="alerta-tela" id="alerta">
   <h2 id="alerta-tit">Tempo esgotado</h2>
   <p id="alerta-txt"></p>
-  <button class="prim" id="alerta-ok">Parar</button><button id="alerta-soneca" style="display: none">Soneca 5 min</button>
+  <div id="alerta-botoes"></div>
+</div>
+
+<div class="sobre" id="escolher">
+  <h2>Qual atividade agora?</h2>
+  <div class="esc-lista" id="esc-lista"></div>
+  <div class="esc-rodape"><button id="esc-voltar">Manter a mesma</button></div>
+</div>
+
+<div class="sobre" id="acao">
+  <div class="acao-box">
+    <p id="acao-tit"></p>
+    <button class="prim" id="acao-pomo">🍅 Iniciar pomodoro (25 min)</button>
+    <button id="acao-concluir">✓ Concluir</button>
+    <button id="acao-cancelar">Cancelar</button>
+  </div>
 </div>
 
 <section class="vista ativa" id="v-relogio">
@@ -174,11 +217,17 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
       <div class="al-chip" id="rel-alarme"></div>
     </div>
     <div class="rel-dir">
+      <div class="pomo" id="pomo">
+        <div class="pomo-lbl" id="pomo-lbl"></div>
+        <div class="pomo-tempo" id="pomo-tempo">25:00</div>
+        <div class="pomo-btns"><button id="pomo-pausa">Pausar</button><button id="pomo-trocar">Trocar atividade</button><button id="pomo-fim">Encerrar</button></div>
+      </div>
       <div class="tf-topo">Minhas pendências</div>
       <div class="tf-res" id="tf-res">Carregando…</div>
       <ul class="tf-lista" id="tf-lista"></ul>
       <div class="tf-mais" id="tf-mais"></div>
       <div class="tf-att" id="tf-att"></div>
+      <div class="pomo-stats" id="pomo-stats"></div>
     </div>
   </div>
 </section>
@@ -224,6 +273,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   <div class="pd">
     <h2>Minhas pendências</h2>
     <p class="pd-res" id="pd-res"></p>
+    <p class="pd-res" id="pd-pomo"></p>
     <div class="pd-lista" id="pd-lista"></div>
     <div class="pd-desfazer" id="pd-desfazer"><span id="pd-desf-txt">Concluída.</span><b>Desfazer</b></div>
   </div>
@@ -313,28 +363,28 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     } catch (e) {}
   }
 
-  // ---------- Alerta em tela cheia (timer, ciclo e alarme) ----------
-  var alertaTimer = null, alertaPisca = null, alertaFim = null, alertaAoParar = null;
+  // ---------- Alerta em tela cheia (timer, pomodoro e alarme) ----------
+  // botoes: [{ t: texto, prim: true/false, acao: função }]. O som para sozinho depois de duracaoMin; a tela fica até um toque.
+  var alertaTimer = null, alertaPisca = null, alertaFim = null;
+  function silenciarAlerta() { clearInterval(alertaTimer); clearInterval(alertaPisca); clearTimeout(alertaFim); $('alerta').classList.remove('pisca'); }
+  function pararAlerta() { silenciarAlerta(); $('alerta').classList.remove('on'); }
   function alertar(titulo, texto, opcoes) {
     opcoes = opcoes || {};
-    pararAlerta(true);
+    pararAlerta();
     $('alerta-tit').textContent = titulo;
     $('alerta-txt').textContent = texto || '';
-    $('alerta-soneca').style.display = opcoes.soneca ? '' : 'none';
-    alertaAoParar = opcoes.aoParar || null;
+    var box = $('alerta-botoes'); box.innerHTML = '';
+    (opcoes.botoes || [{ t: 'Parar', prim: true }]).forEach(function (b) {
+      var el = document.createElement('button');
+      el.textContent = b.t; if (b.prim) el.className = 'prim';
+      toque(el, function () { pararAlerta(); if (b.acao) b.acao(); });
+      box.appendChild(el);
+    });
     $('alerta').classList.add('on');
     bip(); alertaTimer = setInterval(bip, 1200);
     alertaPisca = setInterval(function () { $('alerta').classList.toggle('pisca'); }, 600);
-    alertaFim = setTimeout(function () { pararAlerta(); }, (opcoes.duracaoMin || 3) * 60000);
+    alertaFim = setTimeout(silenciarAlerta, (opcoes.duracaoMin || 2) * 60000);
   }
-  function pararAlerta(silencioso) {
-    clearInterval(alertaTimer); clearInterval(alertaPisca); clearTimeout(alertaFim);
-    var estava = $('alerta').classList.contains('on');
-    $('alerta').classList.remove('on'); $('alerta').classList.remove('pisca');
-    var f = alertaAoParar; alertaAoParar = null;
-    if (estava && !silencioso && f) f();
-  }
-  toque($('alerta-ok'), function () { pararAlerta(); });
 
   // ---------- Navegação ----------
   var vistaAtual = 'v-relogio';
@@ -460,6 +510,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     resumo($('tf-res'), ts);
     var ul = $('tf-lista'); ul.innerHTML = '';
     var max = window.innerHeight > window.innerWidth ? 5 : TF_MAX;
+    if (ciclo) max = window.innerHeight > window.innerWidth ? 3 : 4;
     ts.slice(0, max).forEach(function (t) {
       var li = document.createElement('li');
       li.className = 'tf-item ' + classePri(t) + ' ' + t.situacao;
@@ -468,8 +519,9 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
       tit.appendChild(pt); tit.appendChild(document.createTextNode(t.titulo));
       var meta = document.createElement('span'); meta.className = 'meta';
       var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, tfDados.hoje);
-      meta.appendChild(q); meta.appendChild(document.createTextNode(metaTexto(t)));
+      meta.appendChild(q); meta.appendChild(document.createTextNode(metaTexto(t) + qtdPomo(t)));
       li.appendChild(tit); li.appendChild(meta); ul.appendChild(li);
+      toque(li, function () { abrirAcao(t); });
     });
     $('tf-mais').textContent = ts.length ? (ts.length > max ? 'Ver todas (' + ts.length + ') e concluir ›' : 'Concluir tarefas ›') : '';
     $('tf-att').textContent = 'Central de Tarefas · atualizado ' + (tfDados.atualizado.length > 5 ? 'em ' : 'às ') + tfDados.atualizado;
@@ -492,16 +544,19 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
         ti.appendChild(pt); ti.appendChild(document.createTextNode(t.titulo));
         var me = document.createElement('div'); me.className = 'pd-meta';
         var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, tfDados.hoje);
-        me.appendChild(q); me.appendChild(document.createTextNode(metaTexto(t)));
+        me.appendChild(q); me.appendChild(document.createTextNode(metaTexto(t) + qtdPomo(t)));
         tx.appendChild(ti); tx.appendChild(me);
+        var bp = document.createElement('button'); bp.className = 'pomo-bt'; bp.textContent = '🍅';
+        toque(bp, function () { iniciarPomodoro(t); irPara('v-relogio'); });
         var bt = document.createElement('button'); bt.className = 'prim'; bt.textContent = '✓ Concluir';
         toque(bt, function () { concluir(t); });
-        it.appendChild(tx); it.appendChild(bt); box.appendChild(it);
+        it.appendChild(tx); it.appendChild(bp); it.appendChild(bt); box.appendChild(it);
       });
     });
     var nota = document.createElement('p'); nota.className = 'pd-nota';
     nota.textContent = ts.length ? 'Concluir aqui tira a tarefa desta tela. Na Agenda e no e-mail ela continua até ganhar ✅ no título.' : 'Nada pendente.';
     box.appendChild(nota);
+    desenharAcompanhamento(box);
     box.scrollTop = topo;
   }
   function concluir(t) {
@@ -517,7 +572,6 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     var c = lerConcluidas(); delete c[ultimaConcluida]; gravarConcluidas(c);
     $('pd-desfazer').classList.remove('on'); desenharTarefas();
   });
-  toque($('tf-lista'), function () { if (tfDados) irPara('v-pend'); });
   toque($('tf-mais'), function () { if (tfDados) irPara('v-pend'); });
   function buscarTarefas() {
     if (!tfUrl) { tfAviso('Lista de tarefas ainda não configurada.'); return; }
@@ -545,54 +599,193 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     if (c) { gravarChaveTf(c.replace(/^\s+|\s+$/g, '')); $('tf-res').textContent = 'Carregando…'; buscarTarefas(); }
   });
 
-  // ---------- Timer (ciclo: 25 min de foco, 5 de pausa, 15 a cada 4 focos) ----------
+  // ---------- Timer e pomodoro (25 min de foco, 5 de pausa, 15 a cada 4 focos) ----------
   var tDur = 5 * 60000, tFim = 0, tResta = tDur, tRodando = false, tTocando = false;
-  var ciclo = null; // { fase: 'foco' | 'pausa', n: 1.. }
+  var ciclo = null; // { fase: 'foco' | 'pausa', n, tarefa: {id, titulo} | null, proxima }
+  function curto(txt, n) { return txt.length > n ? txt.substr(0, n) + '…' : txt; }
+  function nomeAtiv(t) { return t ? t.titulo : 'sem atividade específica'; }
   function tMostrar() {
     var r = tRodando ? tFim - Date.now() : tResta;
     $('t-num').textContent = mmss(r);
-    $('t-go').textContent = tRodando ? 'Pausar' : 'Iniciar';
-    $('t-fase').textContent = ciclo ? (ciclo.fase === 'foco' ? 'Foco ' + ciclo.n + ' de 25 min' : 'Pausa ' + (ciclo.n % 4 === 0 ? 'longa (15 min)' : 'curta (5 min)')) : '';
+    $('t-go').textContent = tRodando ? 'Pausar' : (r < tDur ? 'Retomar' : 'Iniciar');
+    $('t-fase').textContent = ciclo ? (ciclo.fase === 'foco' ? 'Foco ' + ciclo.n + ' · ' + curto(nomeAtiv(ciclo.tarefa), 30) : 'Pausa ' + (ciclo.n % 4 === 0 ? 'longa (15 min)' : 'curta (5 min)')) : '';
     $('t-ciclo').className = 'ciclo' + (ciclo ? ' on' : '');
-    $('t-ciclo').textContent = ciclo ? 'Encerrar ciclo' : 'Ciclo 25 min';
+    $('t-ciclo').textContent = ciclo ? 'Encerrar pomodoro' : 'Pomodoro 25 min';
+    var pb = $('pomo');
+    if (!ciclo) { pb.className = 'pomo'; return; }
+    pb.className = 'pomo on' + (ciclo.fase === 'pausa' ? ' pausa' : '');
+    $('pomo-lbl').textContent = ciclo.fase === 'foco'
+      ? '🍅 Foco ' + ciclo.n + ' · ' + nomeAtiv(ciclo.tarefa)
+      : '☕ Pausa ' + (ciclo.n % 4 === 0 ? 'longa' : 'curta') + ' · depois: ' + nomeAtiv(ciclo.proxima);
+    $('pomo-tempo').textContent = mmss(r);
+    $('pomo-pausa').textContent = tRodando ? 'Pausar' : 'Retomar';
   }
   function tDefinir(ms, manterCiclo) {
+    var tinha = !!ciclo;
     if (!manterCiclo) ciclo = null;
     tRodando = false; tDur = tResta = Math.max(0, ms); tMostrar(); atualizarChip();
+    if (tinha !== !!ciclo) desenharTarefas();
   }
   function tIniciar() {
     if (tResta <= 0) return;
     tFim = Date.now() + tResta; tRodando = true; tMostrar(); atualizarChip();
   }
+  function tPausarRetomar() {
+    if (tRodando) { tResta = tFim - Date.now(); tRodando = false; tMostrar(); atualizarChip(); }
+    else tIniciar();
+  }
   function tPararAlarme() { pararAlerta(); }
-  function proximaFase() {
-    if (!ciclo) return;
-    if (ciclo.fase === 'foco') { ciclo.fase = 'pausa'; tDefinir((ciclo.n % 4 === 0 ? 15 : 5) * 60000, true); }
-    else { ciclo.fase = 'foco'; ciclo.n++; tDefinir(25 * 60000, true); }
-    tIniciar();
+  function refTarefa(t) { return t ? { id: chaveTf(t), titulo: t.titulo } : null; }
+  function iniciarPomodoro(t) {
+    ciclo = { fase: 'foco', n: 1, tarefa: refTarefa(t), proxima: null };
+    tDefinir(25 * 60000, true); tIniciar(); desenharTarefas();
+  }
+  function encerrarPomodoro() { tDefinir(25 * 60000); }
+  function iniciarPausa(proxima) {
+    ciclo.proxima = proxima; ciclo.fase = 'pausa';
+    tDefinir((ciclo.n % 4 === 0 ? 15 : 5) * 60000, true); tIniciar();
+  }
+  function iniciarFoco() {
+    ciclo.fase = 'foco'; ciclo.n++; ciclo.tarefa = ciclo.proxima; ciclo.proxima = null;
+    tDefinir(25 * 60000, true); tIniciar();
+  }
+  function fimDoFoco() {
+    var t = ciclo.tarefa;
+    registrarPomodoro(t);
+    var pausa = (ciclo.n % 4 === 0 ? 15 : 5) + ' min';
+    var botoes = t ? [
+      { t: 'Continuar nesta', prim: true, acao: function () { iniciarPausa(t); } },
+      { t: 'Concluí · escolher outra', acao: function () { concluir(t); escolherAtividade(t, iniciarPausa); } },
+      { t: 'Escolher outra', acao: function () { escolherAtividade(t, iniciarPausa); } },
+      { t: 'Encerrar', acao: encerrarPomodoro }
+    ] : [
+      { t: 'Escolher atividade', prim: true, acao: function () { escolherAtividade(null, iniciarPausa); } },
+      { t: 'Seguir sem atividade', acao: function () { iniciarPausa(null); } },
+      { t: 'Encerrar', acao: encerrarPomodoro }
+    ];
+    alertar('🍅 Foco ' + ciclo.n + ' concluído', nomeAtiv(t) + '. Escolha o que vem depois da pausa de ' + pausa + '.', { botoes: botoes });
+  }
+  function fimDaPausa() {
+    alertar('☕ Fim da pausa', 'Próximo foco: ' + nomeAtiv(ciclo.proxima), { botoes: [
+      { t: 'Começar foco', prim: true, acao: iniciarFoco },
+      { t: 'Trocar atividade', acao: function () { escolherAtividade(ciclo.proxima, function (n) { ciclo.proxima = n; iniciarFoco(); }); } },
+      { t: 'Encerrar', acao: encerrarPomodoro }
+    ] });
   }
   function tTick() {
     if (!tRodando) return;
     if (Date.now() >= tFim) {
       tRodando = false; tResta = 0;
-      if (ciclo && ciclo.fase === 'foco') {
-        alertar('Fim do foco ' + ciclo.n, 'A pausa de ' + (ciclo.n % 4 === 0 ? 15 : 5) + ' min começa quando você tocar em Parar.', { duracaoMin: 2, aoParar: proximaFase });
-      } else if (ciclo) {
-        alertar('Fim da pausa', 'O próximo foco de 25 min começa quando você tocar em Parar.', { duracaoMin: 2, aoParar: proximaFase });
-      } else {
-        alertar('Tempo esgotado', 'O timer de ' + mmss(tDur) + ' terminou.', { duracaoMin: 2, aoParar: function () { tResta = tDur; tMostrar(); } });
-      }
+      if (ciclo && ciclo.fase === 'foco') fimDoFoco();
+      else if (ciclo) fimDaPausa();
+      else alertar('Tempo esgotado', 'O timer de ' + mmss(tDur) + ' terminou.', { botoes: [{ t: 'Parar', prim: true, acao: function () { tResta = tDur; tMostrar(); } }] });
     }
     tMostrar(); atualizarChip();
   }
-  toque($('t-go'), function () {
-    if (tRodando) { tResta = tFim - Date.now(); tRodando = false; tMostrar(); atualizarChip(); }
-    else tIniciar();
+
+  // Escolher atividade (lista das pendências abertas)
+  var escolherCb = null, escolherAtual = null;
+  function escolherAtividade(atual, cb) {
+    escolherCb = cb; escolherAtual = atual;
+    var box = $('esc-lista'); box.innerHTML = '';
+    var ts = abertas();
+    ts.forEach(function (t) {
+      var it = document.createElement('div'); it.className = 'esc-item';
+      it.appendChild(document.createTextNode(t.titulo));
+      var sm = document.createElement('small'); sm.textContent = tfQuando(t, tfDados.hoje) + qtdPomo(t);
+      it.appendChild(sm);
+      toque(it, function () { fecharEscolha(refTarefa(t)); });
+      box.appendChild(it);
+    });
+    var livre = document.createElement('div'); livre.className = 'esc-item livre'; livre.textContent = 'Sem atividade específica';
+    toque(livre, function () { fecharEscolha(null); });
+    box.appendChild(livre);
+    $('esc-voltar').textContent = atual ? 'Manter: ' + curto(atual.titulo, 28) : 'Voltar';
+    $('escolher').classList.add('on'); box.scrollTop = 0;
+  }
+  function fecharEscolha(t) {
+    $('escolher').classList.remove('on');
+    var cb = escolherCb; escolherCb = null;
+    if (cb) cb(t);
+  }
+  toque($('esc-voltar'), function () { fecharEscolha(escolherAtual); });
+
+  // Ações ao tocar numa tarefa da tela principal
+  var acaoTarefa = null;
+  function abrirAcao(t) { acaoTarefa = t; $('acao-tit').textContent = t.titulo; $('acao').classList.add('on'); }
+  function fecharAcao() { $('acao').classList.remove('on'); }
+  toque($('acao-pomo'), function () { fecharAcao(); iniciarPomodoro(acaoTarefa); });
+  toque($('acao-concluir'), function () { fecharAcao(); concluir(acaoTarefa); });
+  toque($('acao-cancelar'), fecharAcao);
+  toque($('pomo-pausa'), tPausarRetomar);
+  toque($('pomo-fim'), encerrarPomodoro);
+  toque($('pomo-trocar'), function () {
+    if (!ciclo) return;
+    if (ciclo.fase === 'foco') escolherAtividade(ciclo.tarefa, function (t) { ciclo.tarefa = t; tMostrar(); });
+    else escolherAtividade(ciclo.proxima, function (t) { ciclo.proxima = t; tMostrar(); });
   });
-  toque($('t-zera'), function () { tDefinir(ciclo ? (ciclo.fase === 'foco' ? 25 : 5) * 60000 : tDur, !!ciclo); });
+
+  // Histórico de pomodoros (neste iPad): [{ t: ms, id, titulo }]
+  function lerPomodoros() { try { return JSON.parse(localStorage.getItem('bancada-pomodoros') || '[]'); } catch (e) { return []; } }
+  function registrarPomodoro(t) {
+    var h = lerPomodoros(), lim = Date.now() - 400 * 86400000;
+    h = h.filter(function (p) { return p.t > lim; });
+    h.push({ t: Date.now(), id: t ? t.id : '', titulo: t ? t.titulo : '' });
+    try { localStorage.setItem('bancada-pomodoros', JSON.stringify(h)); } catch (e) {}
+    mostrarPomoStats(); desenharTarefas();
+  }
+  function inicioPeriodos() {
+    var d = new Date(), hoje = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    var dow = (d.getDay() + 6) % 7; // segunda = 0
+    return { dia: hoje, semana: hoje - dow * 86400000, mes: new Date(d.getFullYear(), d.getMonth(), 1).getTime() };
+  }
+  function contarPomodoros() {
+    var p = inicioPeriodos(), c = { dia: 0, semana: 0, mes: 0, porAtiv: {} };
+    lerPomodoros().forEach(function (x) {
+      if (x.t >= p.dia) c.dia++;
+      if (x.t >= p.semana) c.semana++;
+      if (x.t >= p.mes) {
+        c.mes++;
+        var k = x.id || '(livre)';
+        if (!c.porAtiv[k]) c.porAtiv[k] = { n: 0, titulo: x.titulo || 'Sem atividade específica' };
+        c.porAtiv[k].n++;
+      }
+    });
+    return c;
+  }
+  function qtdPomo(t) {
+    var k = chaveTf(t), n = 0;
+    lerPomodoros().forEach(function (x) { if (x.id === k) n++; });
+    return n ? ' · 🍅 ' + n : '';
+  }
+  function mostrarPomoStats() {
+    var c = contarPomodoros();
+    var txt = '🍅 Pomodoros · hoje ' + c.dia + ' · semana ' + c.semana + ' · mês ' + c.mes;
+    $('pomo-stats').textContent = txt; $('pd-pomo').textContent = txt;
+  }
+  function desenharAcompanhamento(box) {
+    var c = contarPomodoros(), lista = [], k;
+    for (k in c.porAtiv) if (c.porAtiv.hasOwnProperty(k)) lista.push(c.porAtiv[k]);
+    if (!lista.length) return;
+    lista.sort(function (a, b) { return b.n - a.n; });
+    var sec = document.createElement('div'); sec.className = 'pd-acomp';
+    var h = document.createElement('div'); h.className = 'pd-grupo'; h.textContent = 'Pomodoros no mês por atividade';
+    sec.appendChild(h);
+    lista.slice(0, 12).forEach(function (a) {
+      var it = document.createElement('div'); it.className = 'pd-acomp-item';
+      var b = document.createElement('b'); b.textContent = '🍅 ' + a.n;
+      it.appendChild(b); it.appendChild(document.createTextNode(a.titulo));
+      sec.appendChild(it);
+    });
+    box.appendChild(sec);
+  }
+
+  toque($('t-go'), tPausarRetomar);
+  toque($('t-zera'), function () { tDefinir(ciclo ? (ciclo.fase === 'foco' ? 25 : (ciclo.n % 4 === 0 ? 15 : 5)) * 60000 : tDur, !!ciclo); });
   toque($('t-ciclo'), function () {
-    if (ciclo) { tDefinir(25 * 60000); return; }
-    ciclo = { fase: 'foco', n: 1 }; tDefinir(25 * 60000, true); tIniciar();
+    if (ciclo) { encerrarPomodoro(); return; }
+    if (tfDados && abertas().length) escolherAtividade(null, function (t) { iniciarPomodoro(t); });
+    else iniciarPomodoro(null);
   });
   toque($('t-mais'), function () {
     if (tRodando) { tFim += 60000; tDur += 60000; } else tDefinir(tResta + 60000, true);
@@ -631,26 +824,26 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   toque($('al-m-'), function () { ajustarAlarme(-5); });
   toque($('al-m+'), function () { ajustarAlarme(5); });
   toque($('al-liga'), function () { alarme.ligado = !alarme.ligado; delete alarme.soneca; salvarAlarme(); mostrarAlarme(); });
-  toque($('alerta-soneca'), function () {
-    pararAlerta(true);
+  function soneca() {
     var t = new Date(Date.now() + 5 * 60000);
     alarme.soneca = t.getHours() * 60 + t.getMinutes();
-  });
+  }
+  var BOTOES_ALARME = [{ t: 'Parar', prim: true }, { t: 'Soneca 5 min', acao: soneca }];
   function verificarAlarme(d) {
     var agora = d.getHours() * 60 + d.getMinutes(), marca = d.toDateString() + ' ' + agora;
     if (alarmeDisparou === marca) return;
     if (alarme.ligado && agora === alarme.h * 60 + alarme.m) {
       alarmeDisparou = marca;
-      alertar('⏰ ' + alarmeTexto(), 'Alarme', { soneca: true, duracaoMin: 5 });
+      alertar('⏰ ' + alarmeTexto(), 'Alarme', { botoes: BOTOES_ALARME, duracaoMin: 5 });
     } else if (alarme.soneca !== undefined && agora === alarme.soneca) {
       alarmeDisparou = marca; delete alarme.soneca;
-      alertar('⏰ Soneca', 'Alarme de ' + alarmeTexto(), { soneca: true, duracaoMin: 5 });
+      alertar('⏰ Soneca', 'Alarme de ' + alarmeTexto(), { botoes: BOTOES_ALARME, duracaoMin: 5 });
     }
   }
 
   function atualizarChip() {
     var chip = $('chip');
-    var mostrar = tRodando && vistaAtual !== 'v-timer';
+    var mostrar = tRodando && vistaAtual !== 'v-timer' && !(ciclo && vistaAtual === 'v-relogio');
     chip.classList.toggle('on', mostrar);
     if (mostrar) $('chip-t').textContent = (ciclo ? (ciclo.fase === 'foco' ? 'Foco ' : 'Pausa ') : '') + mmss(tFim - Date.now());
   }
@@ -674,7 +867,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   // Impede a página inteira de "quicar" ao arrastar, exceto nas listas que rolam
   document.addEventListener('touchmove', function (e) {
     var el = e.target;
-    while (el && el !== document.body) { if (el.id === 'cl-resp' || el.id === 'pd-lista' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
+    while (el && el !== document.body) { if (el.id === 'cl-resp' || el.id === 'pd-lista' || el.id === 'esc-lista' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
     e.preventDefault();
   }, false);
 
@@ -755,7 +948,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   })();
 
   // ---------- Laços ----------
-  relogio(); tMostrar(); cMostrar(); mostrarAlarme();
+  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); mostrarPomoStats();
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
   setInterval(buscarTarefas, 10 * 60000);

@@ -1,6 +1,6 @@
 # Bancada
 
-Tela de espera para o iPad mini 1 (iOS 9): relógio, pendências da Central de Tarefas, timer (com ciclo de 25 min), cronômetro, alarme e assistente.
+Tela de espera para o iPad mini 1 (iOS 9): relógio, pendências da Central de Tarefas, pomodoro por atividade (com contagem do dia, semana e mês), timer, cronômetro, alarme e assistente. Concluídas e histórico de pomodoros ficam salvos só no iPad.
 
 - `index.html`: a página (JavaScript ES5, roda no Safari 9).
 - `apps-script/tarefas.gs`: Google Apps Script que lê na Google Agenda os eventos da Central de Tarefas (rotina Minhas Pendências) e entrega a lista à tela. Publicado como App da Web; exige a chave.

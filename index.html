@@ -25,14 +25,14 @@ button.alerta { background: #e5483b; color: #fff; }
 
 /* Barra de navegação */
 .nav { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; text-align: center; padding-top: 8px; }
-.nav button { background: transparent; color: #6f6c66; font-size: 18px; padding: 10px 22px; margin: 0 6px; }
+.nav button { background: transparent; color: #6f6c66; font-size: 18px; padding: 10px 18px; margin: 0 4px; }
 .nav button.ativa { color: #f2efe8; background: #1c1c1e; }
 
 /* Relógio */
 .rel { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 0 4vw; }
-.rel-esq { -webkit-flex: 1.45; flex: 1.45; min-width: 0; }
-.rel-dir { -webkit-flex: 1; flex: 1; min-width: 0; overflow: hidden; padding-left: 4vw; border-left: 1px solid #262626; }
-.hora { font-size: 19vw; font-weight: 100; line-height: .9; letter-spacing: -.02em; white-space: nowrap; }
+.rel-esq { -webkit-flex: 1; flex: 1; min-width: 0; }
+.rel-dir { -webkit-flex: 1.2; flex: 1.2; min-width: 0; overflow: hidden; padding-left: 4vw; border-left: 1px solid #262626; }
+.hora { font-size: 14.5vw; font-weight: 100; line-height: .9; letter-spacing: -.02em; white-space: nowrap; }
 .hora .seg { font-size: 4vw; color: #6f6c66; margin-left: .6vw; letter-spacing: 0; }
 .data { font-size: 3.2vw; color: #b8b3a8; margin-top: 2vw; }
 .tf-topo { font-size: 1.7vw; color: #b8b3a8; text-transform: uppercase; letter-spacing: .12em; }
@@ -41,13 +41,33 @@ button.alerta { background: #e5483b; color: #fff; }
 .tf-res .atr { color: #e5483b; }
 .tf-lista { margin: 0; padding: 0; list-style: none; }
 .tf-item { padding: .9vw 0; border-top: 1px solid #1f1f1f; font-size: 1.9vw; line-height: 1.3; }
-.tf-item .tit { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tf-item .tit { display: block; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .tf-item .meta { display: block; font-size: 1.45vw; color: #8a857c; margin-top: .25vw; }
 .tf-item .ponto { display: inline-block; width: .9vw; height: .9vw; border-radius: 50%; margin-right: .8vw; background: #55524d; vertical-align: .2vw; }
 .tf-item.alta .ponto { background: #e5483b; }
 .tf-item.media .ponto { background: #f2a33a; }
 .tf-item.atrasada .meta .quando { color: #e5483b; }
-.tf-mais { font-size: 1.5vw; color: #6f6c66; margin-top: 1vw; }
+.tf-mais { font-size: 1.7vw; color: #f2a33a; margin-top: 1.2vw; }
+.tf-lista { cursor: pointer; }
+/* Pendências (tela cheia) */
+.pd { position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 2.4vw 4vw 0; }
+.pd h2 { margin: 0; font-size: 3.4vw; font-weight: 200; }
+.pd-res { font-size: 2.2vw; color: #b8b3a8; margin: .6vw 0 0; }
+.pd-res .atr { color: #e5483b; }
+.pd-lista { position: absolute; top: 10vw; left: 4vw; right: 4vw; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 2vw; }
+.pd-grupo { font-size: 1.7vw; color: #8a857c; text-transform: uppercase; letter-spacing: .12em; margin: 2vw 0 .6vw; }
+.pd-item { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; background: #111; border-radius: 16px; padding: 1.4vw 1.8vw; margin-bottom: 1vw; }
+.pd-txt { -webkit-flex: 1; flex: 1; min-width: 0; padding-right: 1.6vw; }
+.pd-tit { font-size: 2.3vw; line-height: 1.3; }
+.pd-meta { font-size: 1.6vw; color: #8a857c; margin-top: .3vw; }
+.pd-item.atrasada .pd-meta .quando { color: #e5483b; }
+.pd-item .ponto { display: inline-block; width: 1vw; height: 1vw; border-radius: 50%; margin-right: .9vw; background: #55524d; vertical-align: .2vw; }
+.pd-item.alta .ponto { background: #e5483b; } .pd-item.media .ponto { background: #f2a33a; }
+.pd-item button { -webkit-flex: none; flex: none; font-size: 20px; padding: 12px 18px; }
+.pd-desfazer { position: absolute; left: 50%; bottom: 2vw; width: 60%; margin-left: -30%; background: #2a2219; color: #f2efe8; border-radius: 16px; padding: 14px 18px; font-size: 20px; text-align: center; z-index: 6; display: none; }
+.pd-desfazer.on { display: block; }
+.pd-desfazer b { color: #f2a33a; font-weight: 400; margin-left: 12px; }
+.pd-nota { font-size: 1.5vw; color: #55524d; margin-top: 2vw; }
 .tf-att { font-size: 1.3vw; color: #55524d; margin-top: 1.4vw; }
 
 /* Chip de timer em andamento */
@@ -65,6 +85,25 @@ button.alerta { background: #e5483b; color: #fff; }
 .linha button { margin: .5vw; min-width: 8vw; }
 .linha button.grande { min-width: 15vw; font-size: 26px; padding: 18px 22px; }
 .tm-col.tocando { background: #3a1210; }
+.tm-num { font-size: 7.5vw !important; margin: 1.4vw 0 1vw !important; }
+.tm { padding-top: 2vw !important; }
+.tm-col { padding: 1.8vw 1.2vw !important; }
+.tm-col .linha { margin-top: .8vw; }
+.tm-col .linha button { font-size: 18px; padding: 10px 12px; margin: .4vw; min-width: 0; }
+.tm-col .linha button.grande { font-size: 22px; padding: 14px 16px; min-width: 9vw; }
+.tm-fase { font-size: 1.8vw; color: #f2a33a; min-height: 2.4vw; }
+.linha button.ciclo { background: #2a2219; color: #f2a33a; }
+.linha button.ciclo.on { background: #f2a33a; color: #1a1205; }
+.al-hora { font-size: 7.5vw; font-weight: 100; margin: 1.4vw 0 1vw; }
+.al-est { font-size: 1.8vw; color: #8a857c; min-height: 2.4vw; }
+.al-est.on { color: #f2a33a; }
+.al-chip { font-size: 1.8vw; color: #f2a33a; margin-top: 1.4vw; min-height: 2vw; }
+.alerta-tela { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 20; background: #3a1210; display: none; text-align: center; padding-top: 18vh; }
+.alerta-tela.on { display: block; }
+.alerta-tela.pisca { background: #6a1d16; }
+.alerta-tela h2 { margin: 0; font-size: 6vw; font-weight: 200; color: #fff; }
+.alerta-tela p { font-size: 2.6vw; color: #f2d0c8; margin: 2vw 0 4vw; }
+.alerta-tela button { font-size: 30px; padding: 22px 48px; margin: 0 10px; }
 
 /* Receitas */
 .rc { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding: 3vw 4vw; }
@@ -123,13 +162,18 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   .cl-topo h2 { font-size: 5vw; }
   .rel { display: block; padding-top: 4vh; }
   .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
-  .hora { font-size: 26vw; }
+  .hora { font-size: 24vw; }
+  .pd h2 { font-size: 5vw; } .pd-res { font-size: 3.2vw; } .pd-lista { top: 15vw; }
+  .pd-tit { font-size: 3.4vw; } .pd-meta, .pd-nota { font-size: 2.4vw; } .pd-grupo { font-size: 2.5vw; }
   .data { font-size: 4.4vw; }
   .tf-topo { font-size: 2.6vw; } .tf-res { font-size: 3.6vw; }
   .tf-item { font-size: 3vw; } .tf-item .meta { font-size: 2.3vw; } .tf-item .ponto { width: 1.4vw; height: 1.4vw; }
   .tf-mais, .tf-att { font-size: 2.2vw; }
   .tm { display: block; }
+  .tm { overflow-y: scroll; -webkit-overflow-scrolling: touch; }
   .tm-col { margin: 0 0 2vw; }
+  .tm-num, .al-hora { font-size: 12vw !important; } .tm-fase, .al-est, .al-chip { font-size: 2.8vw; }
+  .alerta-tela h2 { font-size: 9vw; } .alerta-tela p { font-size: 3.6vw; }
   .tm-num { font-size: 16vw; } .tm-tit { font-size: 3vw; }
   .cartao { width: 100%; } .cartao h3 { font-size: 4.4vw; } .cartao p { font-size: 3vw; }
   .rc-tit { font-size: 5vw; } .det-top h2 { font-size: 5vw; } .det-meta { font-size: 3vw; }
@@ -142,11 +186,18 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
 
 <div class="chip" id="chip">⏱ <span id="chip-t">0:00</span></div>
 
+<div class="alerta-tela" id="alerta">
+  <h2 id="alerta-tit">Tempo esgotado</h2>
+  <p id="alerta-txt"></p>
+  <button class="prim" id="alerta-ok">Parar</button><button id="alerta-soneca" style="display: none">Soneca 5 min</button>
+</div>
+
 <section class="vista ativa" id="v-relogio">
   <div class="rel">
     <div class="rel-esq">
       <div class="hora"><span id="hm">--:--</span><span class="seg" id="ss"></span></div>
       <div class="data" id="data"></div>
+      <div class="al-chip" id="rel-alarme"></div>
     </div>
     <div class="rel-dir">
       <div class="tf-topo">Minhas pendências</div>
@@ -162,7 +213,9 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   <div class="tm">
     <div class="tm-col" id="col-timer">
       <div class="tm-tit">Timer</div>
+      <div class="tm-fase" id="t-fase"></div>
       <div class="tm-num" id="t-num">5:00</div>
+      <div class="linha"><button class="ciclo" id="t-ciclo">Ciclo 25 min</button></div>
       <div class="linha" id="t-presets"></div>
       <div class="linha">
         <button id="t-menos">− 1 min</button>
@@ -176,10 +229,19 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     <div class="tm-col">
       <div class="tm-tit">Cronômetro</div>
       <div class="tm-num" id="c-num">0:00<small>.0</small></div>
-      <div class="linha" style="margin-top: 9vw">
+      <div class="linha" style="margin-top: 4vw">
         <button class="prim grande" id="c-go">Iniciar</button>
         <button class="grande" id="c-zera">Zerar</button>
       </div>
+    </div>
+    <div class="tm-col" id="col-alarme">
+      <div class="tm-tit">Alarme</div>
+      <div class="al-est" id="al-est">Desligado</div>
+      <div class="al-hora" id="al-hora">06:30</div>
+      <div class="linha"><button id="al-h-">− 1 h</button><button id="al-h+">+ 1 h</button></div>
+      <div class="linha"><button id="al-m-">− 5 min</button><button id="al-m+">+ 5 min</button></div>
+      <div class="linha"><button class="prim grande" id="al-liga">Ligar</button></div>
+      <div class="al-chip">Toca com a tela aberta e o iPad ligado.</div>
     </div>
   </div>
 </section>
@@ -198,6 +260,15 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
         <div class="pass"><p class="sub">Modo de preparo · toque no passo para marcar</p><div id="d-pass"></div></div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="vista" id="v-pend">
+  <div class="pd">
+    <h2>Minhas pendências</h2>
+    <p class="pd-res" id="pd-res"></p>
+    <div class="pd-lista" id="pd-lista"></div>
+    <div class="pd-desfazer" id="pd-desfazer"><span id="pd-desf-txt">Concluída.</span><b>Desfazer</b></div>
   </div>
 </section>
 
@@ -224,6 +295,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
 
 <div class="nav">
   <button class="ativa" data-v="v-relogio">Relógio</button>
+  <button data-v="v-pend">Pendências</button>
   <button data-v="v-timer">Timer</button>
   <button data-v="v-receitas">Receitas</button>
   <button data-v="v-claude">Assistente</button>
@@ -267,19 +339,46 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   }
   document.addEventListener('touchend', liberarSom, false);
   document.addEventListener('click', liberarSom, false);
-  function bip() {
+  function tom(freq, ini, dur, vol) {
+    var o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + ini;
+    o.frequency.value = freq; o.type = 'square';
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start ? o.start(t) : o.noteOn(t);
+    o.stop ? o.stop(t + dur + 0.05) : o.noteOff(t + dur + 0.05);
+  }
+  function bip() { // três toques curtos e altos
     if (!ctx) return;
     try {
-      var o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
-      o.frequency.value = 880; o.type = 'sine';
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.6, t + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
-      o.connect(g); g.connect(ctx.destination);
-      o.start ? o.start(t) : o.noteOn(t);
-      o.stop ? o.stop(t + 0.4) : o.noteOff(t + 0.4);
+      if (ctx.resume && ctx.state === 'suspended') ctx.resume();
+      tom(988, 0, 0.18, 0.5); tom(988, 0.25, 0.18, 0.5); tom(1319, 0.5, 0.35, 0.6);
     } catch (e) {}
   }
+
+  // ---------- Alerta em tela cheia (timer, ciclo e alarme) ----------
+  var alertaTimer = null, alertaPisca = null, alertaFim = null, alertaAoParar = null;
+  function alertar(titulo, texto, opcoes) {
+    opcoes = opcoes || {};
+    pararAlerta(true);
+    $('alerta-tit').textContent = titulo;
+    $('alerta-txt').textContent = texto || '';
+    $('alerta-soneca').style.display = opcoes.soneca ? '' : 'none';
+    alertaAoParar = opcoes.aoParar || null;
+    $('alerta').classList.add('on');
+    bip(); alertaTimer = setInterval(bip, 1200);
+    alertaPisca = setInterval(function () { $('alerta').classList.toggle('pisca'); }, 600);
+    alertaFim = setTimeout(function () { pararAlerta(); }, (opcoes.duracaoMin || 3) * 60000);
+  }
+  function pararAlerta(silencioso) {
+    clearInterval(alertaTimer); clearInterval(alertaPisca); clearTimeout(alertaFim);
+    var estava = $('alerta').classList.contains('on');
+    $('alerta').classList.remove('on'); $('alerta').classList.remove('pisca');
+    var f = alertaAoParar; alertaAoParar = null;
+    if (estava && !silencioso && f) f();
+  }
+  toque($('alerta-ok'), function () { pararAlerta(); });
 
   // ---------- Navegação ----------
   var vistaAtual = 'v-relogio';
@@ -302,6 +401,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     $('ss').textContent = dois(d.getSeconds());
     $('data').textContent = DIAS[d.getDay()] + ', ' + d.getDate() + ' de ' + MESES[d.getMonth()];
     document.body.classList.toggle('noite', h >= 22 || h < 6);
+    if (typeof verificarAlarme === 'function') verificarAlarme(d);
   }
 
   // ---------- Decifrar tarefas.enc.json (SHA-256 em ES5; mesmo esquema de tools/cifrar_tarefas.py) ----------
@@ -362,7 +462,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   var DIAS_C = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
   function lerChaveTf() { try { return localStorage.getItem('bancada-chave-tarefas') || ''; } catch (e) { return ''; } }
   function gravarChaveTf(c) { try { localStorage.setItem('bancada-chave-tarefas', c); } catch (e) {} }
-  function tfAviso(t) { $('tf-res').textContent = t; $('tf-lista').innerHTML = ''; $('tf-mais').textContent = ''; }
+  function tfAviso(t) { $('tf-res').textContent = t; $('tf-lista').innerHTML = ''; $('tf-mais').textContent = ''; $('pd-res').textContent = t; $('pd-lista').innerHTML = ''; }
   function tfQuando(t, hoje) {
     if (t.situacao === 'atrasada') {
       var p = t.dia.split('-'), h = hoje.split('-');
@@ -373,33 +473,96 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     var q = t.dia.split('-'), d = new Date(+q[0], +q[1] - 1, +q[2]);
     return DIAS_C[d.getDay()] + ' ' + q[2] + '/' + q[1] + (t.hora ? ' ' + t.hora : '');
   }
-  function mostrarTarefas(r) {
-    var ts = r.tarefas || [], na = 0, nh = 0, ns = 0;
+  // Concluídas marcadas no iPad: { chave: data em ms }. Somem da tela na hora.
+  var tfDados = null, desfazerTimer = null, ultimaConcluida = '';
+  function lerConcluidas() { try { return JSON.parse(localStorage.getItem('bancada-concluidas') || '{}'); } catch (e) { return {}; } }
+  function gravarConcluidas(o) { try { localStorage.setItem('bancada-concluidas', JSON.stringify(o)); } catch (e) {} }
+  function chaveTf(t) { return t.id || (t.dia + '|' + t.titulo); }
+  function abertas() {
+    var c = lerConcluidas(), lim = Date.now() - 45 * 86400000, mudou = false, k;
+    for (k in c) if (c.hasOwnProperty(k) && c[k] < lim) { delete c[k]; mudou = true; }
+    if (mudou) gravarConcluidas(c);
+    return (tfDados && tfDados.tarefas || []).filter(function (t) { return !c[chaveTf(t)]; });
+  }
+  function resumo(el, ts) {
+    var na = 0, nh = 0, ns = 0;
     ts.forEach(function (t) { if (t.situacao === 'atrasada') na++; else if (t.situacao === 'hoje') nh++; else ns++; });
-    var res = $('tf-res'); res.innerHTML = '';
-    if (!ts.length) { res.textContent = 'Nada pendente. 🎉'; }
-    else {
-      if (na) { var a = document.createElement('b'); a.className = 'atr'; a.textContent = na + (na === 1 ? ' atrasada' : ' atrasadas'); res.appendChild(a); res.appendChild(document.createTextNode(' · ')); }
-      var b = document.createElement('b'); b.textContent = nh + ' hoje'; res.appendChild(b);
-      res.appendChild(document.createTextNode(' · ' + ns + ' na semana'));
-    }
+    el.innerHTML = '';
+    if (!ts.length) { el.textContent = 'Nada pendente. 🎉'; return; }
+    if (na) { var a = document.createElement('b'); a.className = 'atr'; a.textContent = na + (na === 1 ? ' atrasada' : ' atrasadas'); el.appendChild(a); el.appendChild(document.createTextNode(' · ')); }
+    var b = document.createElement('b'); b.textContent = nh + ' hoje'; el.appendChild(b);
+    el.appendChild(document.createTextNode(' · ' + ns + ' na semana'));
+  }
+  function metaTexto(t) {
+    return (t.frente && t.frente !== 'Pessoal' ? ' · ' + t.frente : '') + ' · prioridade ' + (t.prioridade || '').toLowerCase();
+  }
+  function classePri(t) { return (t.prioridade || '').toLowerCase().replace('é', 'e'); }
+  function mostrarTarefas(r) { tfDados = r; desenharTarefas(); }
+  function desenharTarefas() {
+    if (!tfDados) return;
+    var ts = abertas();
+    resumo($('tf-res'), ts);
     var ul = $('tf-lista'); ul.innerHTML = '';
     var max = window.innerHeight > window.innerWidth ? 5 : TF_MAX;
     ts.slice(0, max).forEach(function (t) {
       var li = document.createElement('li');
-      var pr = (t.prioridade || '').toLowerCase().replace('é', 'e');
-      li.className = 'tf-item ' + pr + ' ' + t.situacao;
+      li.className = 'tf-item ' + classePri(t) + ' ' + t.situacao;
       var tit = document.createElement('span'); tit.className = 'tit';
       var pt = document.createElement('span'); pt.className = 'ponto';
       tit.appendChild(pt); tit.appendChild(document.createTextNode(t.titulo));
       var meta = document.createElement('span'); meta.className = 'meta';
-      var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, r.hoje);
-      meta.appendChild(q); meta.appendChild(document.createTextNode((t.frente && t.frente !== 'Pessoal' ? ' · ' + t.frente : '') + ' · prioridade ' + (t.prioridade || '').toLowerCase()));
+      var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, tfDados.hoje);
+      meta.appendChild(q); meta.appendChild(document.createTextNode(metaTexto(t)));
       li.appendChild(tit); li.appendChild(meta); ul.appendChild(li);
     });
-    $('tf-mais').textContent = ts.length > max ? '+ ' + (ts.length - max) + ' na lista completa' : '';
-    $('tf-att').textContent = 'Central de Tarefas · atualizado ' + (r.atualizado.length > 5 ? 'em ' : 'às ') + r.atualizado;
+    $('tf-mais').textContent = ts.length ? (ts.length > max ? 'Ver todas (' + ts.length + ') e concluir ›' : 'Concluir tarefas ›') : '';
+    $('tf-att').textContent = 'Central de Tarefas · atualizado ' + (tfDados.atualizado.length > 5 ? 'em ' : 'às ') + tfDados.atualizado;
+    desenharPendencias(ts);
   }
+  function desenharPendencias(ts) {
+    resumo($('pd-res'), ts);
+    var box = $('pd-lista'), topo = box.scrollTop; box.innerHTML = '';
+    var grupos = [['atrasada', 'Atrasadas'], ['hoje', 'Hoje'], ['semana', 'Próximos 7 dias']];
+    grupos.forEach(function (g) {
+      var doGrupo = ts.filter(function (t) { return t.situacao === g[0]; });
+      if (!doGrupo.length) return;
+      var h = document.createElement('div'); h.className = 'pd-grupo'; h.textContent = g[1] + ' (' + doGrupo.length + ')';
+      box.appendChild(h);
+      doGrupo.forEach(function (t) {
+        var it = document.createElement('div'); it.className = 'pd-item ' + classePri(t) + ' ' + t.situacao;
+        var tx = document.createElement('div'); tx.className = 'pd-txt';
+        var ti = document.createElement('div'); ti.className = 'pd-tit';
+        var pt = document.createElement('span'); pt.className = 'ponto';
+        ti.appendChild(pt); ti.appendChild(document.createTextNode(t.titulo));
+        var me = document.createElement('div'); me.className = 'pd-meta';
+        var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, tfDados.hoje);
+        me.appendChild(q); me.appendChild(document.createTextNode(metaTexto(t)));
+        tx.appendChild(ti); tx.appendChild(me);
+        var bt = document.createElement('button'); bt.className = 'prim'; bt.textContent = '✓ Concluir';
+        toque(bt, function () { concluir(t); });
+        it.appendChild(tx); it.appendChild(bt); box.appendChild(it);
+      });
+    });
+    var nota = document.createElement('p'); nota.className = 'pd-nota';
+    nota.textContent = ts.length ? 'Concluir aqui tira a tarefa desta tela. Na Agenda e no e-mail ela continua até ganhar ✅ no título.' : 'Nada pendente.';
+    box.appendChild(nota);
+    box.scrollTop = topo;
+  }
+  function concluir(t) {
+    var c = lerConcluidas(); c[chaveTf(t)] = Date.now(); gravarConcluidas(c);
+    ultimaConcluida = chaveTf(t);
+    $('pd-desf-txt').textContent = 'Concluída: ' + (t.titulo.length > 40 ? t.titulo.substr(0, 40) + '…' : t.titulo);
+    $('pd-desfazer').classList.add('on');
+    clearTimeout(desfazerTimer);
+    desfazerTimer = setTimeout(function () { $('pd-desfazer').classList.remove('on'); }, 7000);
+    desenharTarefas();
+  }
+  toque($('pd-desfazer'), function () {
+    var c = lerConcluidas(); delete c[ultimaConcluida]; gravarConcluidas(c);
+    $('pd-desfazer').classList.remove('on'); desenharTarefas();
+  });
+  toque($('tf-lista'), function () { if (tfDados) irPara('v-pend'); });
+  toque($('tf-mais'), function () { if (tfDados) irPara('v-pend'); });
   function buscarTarefas() {
     if (!tfUrl) { tfAviso('Lista de tarefas ainda não configurada.'); return; }
     var chave = lerChaveTf();
@@ -426,51 +589,61 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     if (c) { gravarChaveTf(c.replace(/^\s+|\s+$/g, '')); $('tf-res').textContent = 'Carregando…'; buscarTarefas(); }
   });
 
-  // ---------- Timer ----------
-  var tDur = 5 * 60000, tFim = 0, tResta = tDur, tRodando = false, tTocando = false, tBipTimer = null;
+  // ---------- Timer (ciclo: 25 min de foco, 5 de pausa, 15 a cada 4 focos) ----------
+  var tDur = 5 * 60000, tFim = 0, tResta = tDur, tRodando = false, tTocando = false;
+  var ciclo = null; // { fase: 'foco' | 'pausa', n: 1.. }
   function tMostrar() {
     var r = tRodando ? tFim - Date.now() : tResta;
     $('t-num').textContent = mmss(r);
-    $('t-go').textContent = tTocando ? 'Parar alarme' : (tRodando ? 'Pausar' : 'Iniciar');
-    $('t-go').className = 'grande ' + (tTocando ? 'alerta' : 'prim');
+    $('t-go').textContent = tRodando ? 'Pausar' : 'Iniciar';
+    $('t-fase').textContent = ciclo ? (ciclo.fase === 'foco' ? 'Foco ' + ciclo.n + ' de 25 min' : 'Pausa ' + (ciclo.n % 4 === 0 ? 'longa (15 min)' : 'curta (5 min)')) : '';
+    $('t-ciclo').className = 'ciclo' + (ciclo ? ' on' : '');
+    $('t-ciclo').textContent = ciclo ? 'Encerrar ciclo' : 'Ciclo 25 min';
   }
-  function tDefinir(ms) {
-    if (tTocando) tPararAlarme();
+  function tDefinir(ms, manterCiclo) {
+    if (!manterCiclo) ciclo = null;
     tRodando = false; tDur = tResta = Math.max(0, ms); tMostrar(); atualizarChip();
   }
   function tIniciar() {
     if (tResta <= 0) return;
     tFim = Date.now() + tResta; tRodando = true; tMostrar(); atualizarChip();
   }
-  function tPararAlarme() {
-    tTocando = false; clearInterval(tBipTimer);
-    $('col-timer').classList.remove('tocando');
-    $('chip').classList.remove('fim');
-    tResta = tDur; tMostrar(); atualizarChip();
+  function tPararAlarme() { pararAlerta(); }
+  function proximaFase() {
+    if (!ciclo) return;
+    if (ciclo.fase === 'foco') { ciclo.fase = 'pausa'; tDefinir((ciclo.n % 4 === 0 ? 15 : 5) * 60000, true); }
+    else { ciclo.fase = 'foco'; ciclo.n++; tDefinir(25 * 60000, true); }
+    tIniciar();
   }
   function tTick() {
     if (!tRodando) return;
     if (Date.now() >= tFim) {
-      tRodando = false; tResta = 0; tTocando = true;
-      $('col-timer').classList.add('tocando');
-      $('chip').classList.add('fim');
-      bip(); tBipTimer = setInterval(bip, 700);
-      setTimeout(function () { if (tTocando) tPararAlarme(); }, 60000);
+      tRodando = false; tResta = 0;
+      if (ciclo && ciclo.fase === 'foco') {
+        alertar('Fim do foco ' + ciclo.n, 'A pausa de ' + (ciclo.n % 4 === 0 ? 15 : 5) + ' min começa quando você tocar em Parar.', { duracaoMin: 2, aoParar: proximaFase });
+      } else if (ciclo) {
+        alertar('Fim da pausa', 'O próximo foco de 25 min começa quando você tocar em Parar.', { duracaoMin: 2, aoParar: proximaFase });
+      } else {
+        alertar('Tempo esgotado', 'O timer de ' + mmss(tDur) + ' terminou.', { duracaoMin: 2, aoParar: function () { tResta = tDur; tMostrar(); } });
+      }
     }
     tMostrar(); atualizarChip();
   }
   toque($('t-go'), function () {
-    if (tTocando) return tPararAlarme();
     if (tRodando) { tResta = tFim - Date.now(); tRodando = false; tMostrar(); atualizarChip(); }
     else tIniciar();
   });
-  toque($('t-zera'), function () { tDefinir(tDur); });
+  toque($('t-zera'), function () { tDefinir(ciclo ? (ciclo.fase === 'foco' ? 25 : 5) * 60000 : tDur, !!ciclo); });
+  toque($('t-ciclo'), function () {
+    if (ciclo) { tDefinir(25 * 60000); return; }
+    ciclo = { fase: 'foco', n: 1 }; tDefinir(25 * 60000, true); tIniciar();
+  });
   toque($('t-mais'), function () {
-    if (tRodando) { tFim += 60000; tDur += 60000; } else tDefinir((tRodando ? tFim - Date.now() : tResta) + 60000);
+    if (tRodando) { tFim += 60000; tDur += 60000; } else tDefinir(tResta + 60000, true);
     tMostrar();
   });
   toque($('t-menos'), function () {
-    if (tRodando) { tFim = Math.max(Date.now() + 1000, tFim - 60000); } else tDefinir(Math.max(60000, tResta - 60000));
+    if (tRodando) { tFim = Math.max(Date.now() + 1000, tFim - 60000); } else tDefinir(Math.max(60000, tResta - 60000), true);
     tMostrar();
   });
   [1, 3, 5, 10, 15, 30].forEach(function (m) {
@@ -480,13 +653,52 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     $('t-presets').appendChild(b);
   });
 
+  // ---------- Alarme por horário (salvo neste iPad) ----------
+  var alarme = (function () { try { return JSON.parse(localStorage.getItem('bancada-alarme')) || null; } catch (e) { return null; } })() || { h: 6, m: 30, ligado: false };
+  var alarmeDisparou = '';
+  function salvarAlarme() { try { localStorage.setItem('bancada-alarme', JSON.stringify(alarme)); } catch (e) {} }
+  function alarmeTexto() { return dois(alarme.h) + ':' + dois(alarme.m); }
+  function mostrarAlarme() {
+    $('al-hora').textContent = alarmeTexto();
+    $('al-est').textContent = alarme.ligado ? 'Ligado · toca todo dia' : 'Desligado';
+    $('al-est').className = 'al-est' + (alarme.ligado ? ' on' : '');
+    $('al-liga').textContent = alarme.ligado ? 'Desligar' : 'Ligar';
+    $('al-liga').className = 'grande' + (alarme.ligado ? '' : ' prim');
+    $('rel-alarme').textContent = alarme.ligado ? '⏰ Alarme ' + alarmeTexto() : '';
+  }
+  function ajustarAlarme(dm) {
+    var t = (alarme.h * 60 + alarme.m + dm + 1440) % 1440;
+    alarme.h = Math.floor(t / 60); alarme.m = t % 60; salvarAlarme(); mostrarAlarme();
+  }
+  toque($('al-h-'), function () { ajustarAlarme(-60); });
+  toque($('al-h+'), function () { ajustarAlarme(60); });
+  toque($('al-m-'), function () { ajustarAlarme(-5); });
+  toque($('al-m+'), function () { ajustarAlarme(5); });
+  toque($('al-liga'), function () { alarme.ligado = !alarme.ligado; delete alarme.soneca; salvarAlarme(); mostrarAlarme(); });
+  toque($('alerta-soneca'), function () {
+    pararAlerta(true);
+    var t = new Date(Date.now() + 5 * 60000);
+    alarme.soneca = t.getHours() * 60 + t.getMinutes();
+  });
+  function verificarAlarme(d) {
+    var agora = d.getHours() * 60 + d.getMinutes(), marca = d.toDateString() + ' ' + agora;
+    if (alarmeDisparou === marca) return;
+    if (alarme.ligado && agora === alarme.h * 60 + alarme.m) {
+      alarmeDisparou = marca;
+      alertar('⏰ ' + alarmeTexto(), 'Alarme', { soneca: true, duracaoMin: 5 });
+    } else if (alarme.soneca !== undefined && agora === alarme.soneca) {
+      alarmeDisparou = marca; delete alarme.soneca;
+      alertar('⏰ Soneca', 'Alarme de ' + alarmeTexto(), { soneca: true, duracaoMin: 5 });
+    }
+  }
+
   function atualizarChip() {
     var chip = $('chip');
-    var mostrar = (tRodando || tTocando) && vistaAtual !== 'v-timer';
+    var mostrar = tRodando && vistaAtual !== 'v-timer';
     chip.classList.toggle('on', mostrar);
-    if (mostrar) $('chip-t').textContent = tTocando ? 'Tempo esgotado' : mmss(tFim - Date.now());
+    if (mostrar) $('chip-t').textContent = (ciclo ? (ciclo.fase === 'foco' ? 'Foco ' : 'Pausa ') : '') + mmss(tFim - Date.now());
   }
-  toque($('chip'), function () { if (tTocando) tPararAlarme(); irPara('v-timer'); });
+  toque($('chip'), function () { irPara('v-timer'); });
 
   // ---------- Cronômetro ----------
   var cIni = 0, cAcum = 0, cRodando = false;
@@ -556,7 +768,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   // Impede a página inteira de "quicar" ao arrastar, exceto na lista de receitas
   document.addEventListener('touchmove', function (e) {
     var el = e.target;
-    while (el && el !== document.body) { if (el.id === 'rc' || el.id === 'cl-resp' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
+    while (el && el !== document.body) { if (el.id === 'rc' || el.id === 'cl-resp' || el.id === 'pd-lista' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
     e.preventDefault();
   }, false);
 
@@ -637,7 +849,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   })();
 
   // ---------- Laços ----------
-  relogio(); tMostrar(); cMostrar(); buscarReceitas();
+  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); buscarReceitas();
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
   setInterval(buscarTarefas, 10 * 60000);

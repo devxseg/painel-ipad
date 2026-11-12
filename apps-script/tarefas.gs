@@ -49,6 +49,7 @@ function doGet(e) {
     if (FRENTES.indexOf(frente) < 0) return;
 
     tarefas.push({
+      id: ev.getId(),
       titulo: titulo.replace(/^❗️?\s*/, '').replace(/^\[(XSEG|NEXACORE|TAP)\]\s*/, ''),
       frente: frente,
       prioridade: campo_(desc, 'Prioridade') || 'Média',

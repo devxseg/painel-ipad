@@ -76,6 +76,7 @@ def montar(eventos, agora):
         titulo = re.sub(r'^❗️?\s*', '', titulo)
         titulo = re.sub(r'^\[(XSEG|NEXACORE|TAP)\]\s*', '', titulo)
         tarefas.append({
+            'id': ev.get('id', ''),
             'titulo': titulo,
             'frente': frente,
             'prioridade': campo(desc, 'Prioridade') or 'Média',

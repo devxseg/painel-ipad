@@ -105,28 +105,6 @@ button.alerta { background: #e5483b; color: #fff; }
 .alerta-tela p { font-size: 2.6vw; color: #f2d0c8; margin: 2vw 0 4vw; }
 .alerta-tela button { font-size: 30px; padding: 22px 48px; margin: 0 10px; }
 
-/* Receitas */
-.rc { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding: 3vw 4vw; }
-.rc-tit { font-size: 3.4vw; font-weight: 200; margin: 0 0 2vw; }
-.cartao { display: inline-block; vertical-align: top; width: 47%; margin: 0 2% 2vw 0; background: #111; border-radius: 18px; padding: 2.4vw; }
-.cartao h3 { margin: 0; font-size: 2.8vw; font-weight: 400; }
-.cartao p { margin: .8vw 0 0; color: #b8b3a8; font-size: 1.8vw; }
-.det { display: none; }
-.det.on { display: block; }
-.det-top { margin-bottom: 2vw; }
-.det-top button { margin-right: 1.4vw; vertical-align: middle; }
-.det-top h2 { display: inline-block; vertical-align: middle; margin: 0; font-size: 3.6vw; font-weight: 300; }
-.det-meta { color: #b8b3a8; font-size: 1.9vw; margin: 1vw 0 0; }
-.cols { display: -webkit-flex; display: flex; }
-.ingr { -webkit-flex: 1; flex: 1; padding-right: 3vw; }
-.pass { -webkit-flex: 1.6; flex: 1.6; }
-.sub { font-size: 1.7vw; color: #b8b3a8; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 1.2vw; }
-.ingr li { font-size: 2.3vw; line-height: 1.35; margin-bottom: 1vw; }
-.passo { background: #111; border-radius: 16px; padding: 1.6vw 2vw; margin-bottom: 1.2vw; font-size: 2.4vw; line-height: 1.35; }
-.passo .n { color: #f2a33a; font-weight: 400; margin-right: .8vw; }
-.passo.feito { opacity: .4; }
-.passo button { display: block; margin-top: 1vw; font-size: 20px; padding: 10px 16px; }
-
 /* Modo noturno: vermelho escuro, como as telas de cabeceira */
 body.noite #v-relogio { color: #8f2a22; }
 body.noite .data, body.noite .tf-topo, body.noite .tf-item .meta { color: #6e2019; }
@@ -175,10 +153,6 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   .tm-num, .al-hora { font-size: 12vw !important; } .tm-fase, .al-est, .al-chip { font-size: 2.8vw; }
   .alerta-tela h2 { font-size: 9vw; } .alerta-tela p { font-size: 3.6vw; }
   .tm-num { font-size: 16vw; } .tm-tit { font-size: 3vw; }
-  .cartao { width: 100%; } .cartao h3 { font-size: 4.4vw; } .cartao p { font-size: 3vw; }
-  .rc-tit { font-size: 5vw; } .det-top h2 { font-size: 5vw; } .det-meta { font-size: 3vw; }
-  .cols { display: block; } .ingr { padding: 0 0 3vw; }
-  .ingr li { font-size: 3.4vw; } .passo { font-size: 3.5vw; } .sub { font-size: 2.6vw; }
 }
 </style>
 </head>
@@ -246,23 +220,6 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   </div>
 </section>
 
-<section class="vista" id="v-receitas">
-  <div class="rc" id="rc">
-    <div id="lista">
-      <h2 class="rc-tit">Receitas</h2>
-      <div id="cartoes"></div>
-    </div>
-    <div class="det" id="det">
-      <div class="det-top"><button id="voltar">‹ Receitas</button><h2 id="d-nome"></h2></div>
-      <p class="det-meta" id="d-meta"></p>
-      <div class="cols" style="margin-top: 2.4vw">
-        <div class="ingr"><p class="sub">Ingredientes</p><ul id="d-ingr" style="padding-left: 1.2em; margin: 0"></ul></div>
-        <div class="pass"><p class="sub">Modo de preparo · toque no passo para marcar</p><div id="d-pass"></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="vista" id="v-pend">
   <div class="pd">
     <h2>Minhas pendências</h2>
@@ -297,7 +254,6 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   <button class="ativa" data-v="v-relogio">Relógio</button>
   <button data-v="v-pend">Pendências</button>
   <button data-v="v-timer">Timer</button>
-  <button data-v="v-receitas">Receitas</button>
   <button data-v="v-claude">Assistente</button>
 </div>
 
@@ -715,60 +671,10 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   });
   toque($('c-zera'), function () { cRodando = false; cAcum = 0; cMostrar(); });
 
-  // ---------- Receitas ----------
-  var receitas = [];
-  function abrirReceita(r) {
-    $('d-nome').textContent = r.nome;
-    $('d-meta').textContent = [r.tempo, r.rende].filter(Boolean).join(' · ');
-    var ul = $('d-ingr'); ul.innerHTML = '';
-    (r.ingredientes || []).forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
-    var box = $('d-pass'); box.innerHTML = '';
-    (r.passos || []).forEach(function (p, i) {
-      var d = document.createElement('div'); d.className = 'passo';
-      var n = document.createElement('span'); n.className = 'n'; n.textContent = (i + 1) + '.';
-      d.appendChild(n); d.appendChild(document.createTextNode(p.texto));
-      toque(d, function () { d.classList.toggle('feito'); });
-      if (p.min) {
-        var b = document.createElement('button'); b.className = 'prim';
-        b.textContent = '⏱ Iniciar timer de ' + p.min + ' min';
-        toque(b, function (e) { if (e && e.stopPropagation) e.stopPropagation(); tDefinir(p.min * 60000); tIniciar(); });
-        b.addEventListener('touchend', function (e) { e.stopPropagation(); }, false);
-        d.appendChild(b);
-      }
-      box.appendChild(d);
-    });
-    $('lista').style.display = 'none';
-    $('det').classList.add('on');
-    $('rc').scrollTop = 0;
-  }
-  toque($('voltar'), function () { $('det').classList.remove('on'); $('lista').style.display = ''; $('rc').scrollTop = 0; });
-
-  function montarLista() {
-    var box = $('cartoes'); box.innerHTML = '';
-    receitas.forEach(function (r) {
-      var c = document.createElement('div'); c.className = 'cartao';
-      var h = document.createElement('h3'); h.textContent = r.nome;
-      var p = document.createElement('p'); p.textContent = [r.tempo, r.rende].filter(Boolean).join(' · ');
-      c.appendChild(h); c.appendChild(p);
-      toque(c, function () { abrirReceita(r); });
-      box.appendChild(c);
-    });
-  }
-  function buscarReceitas() {
-    var x = new XMLHttpRequest();
-    x.open('GET', 'recipes.json?t=' + Date.now(), true);
-    x.onreadystatechange = function () {
-      if (x.readyState !== 4) return;
-      try { receitas = JSON.parse(x.responseText); montarLista(); }
-      catch (e) { $('cartoes').textContent = 'Não foi possível carregar as receitas.'; }
-    };
-    x.send();
-  }
-
-  // Impede a página inteira de "quicar" ao arrastar, exceto na lista de receitas
+  // Impede a página inteira de "quicar" ao arrastar, exceto nas listas que rolam
   document.addEventListener('touchmove', function (e) {
     var el = e.target;
-    while (el && el !== document.body) { if (el.id === 'rc' || el.id === 'cl-resp' || el.id === 'pd-lista' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
+    while (el && el !== document.body) { if (el.id === 'cl-resp' || el.id === 'pd-lista' || el.tagName === 'TEXTAREA') return; el = el.parentNode; }
     e.preventDefault();
   }, false);
 
@@ -849,11 +755,11 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   })();
 
   // ---------- Laços ----------
-  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); buscarReceitas();
+  relogio(); tMostrar(); cMostrar(); mostrarAlarme();
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
   setInterval(buscarTarefas, 10 * 60000);
-  // Recarrega a página a cada 6 h (pega receitas e melhorias novas), só se nada estiver em uso
+  // Recarrega a página a cada 6 h (pega melhorias novas), só se nada estiver em uso
   setInterval(function () {
     if (!tRodando && !tTocando && !cRodando && vistaAtual === 'v-relogio') location.reload();
   }, 6 * 3600000);

@@ -30,20 +30,25 @@ button.alerta { background: #e5483b; color: #fff; }
 
 /* Relógio */
 .rel { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 0 4vw; }
-.rel-esq { -webkit-flex: 1.45; flex: 1.45; }
-.rel-dir { -webkit-flex: 1; flex: 1; padding-left: 4vw; border-left: 1px solid #262626; }
+.rel-esq { -webkit-flex: 1.45; flex: 1.45; min-width: 0; }
+.rel-dir { -webkit-flex: 1; flex: 1; min-width: 0; overflow: hidden; padding-left: 4vw; border-left: 1px solid #262626; }
 .hora { font-size: 19vw; font-weight: 100; line-height: .9; letter-spacing: -.02em; white-space: nowrap; }
 .hora .seg { font-size: 4vw; color: #6f6c66; margin-left: .6vw; letter-spacing: 0; }
 .data { font-size: 3.2vw; color: #b8b3a8; margin-top: 2vw; }
-.temp { font-size: 9vw; font-weight: 200; line-height: 1; }
-.temp .ic { font-size: 5vw; margin-right: 1.2vw; vertical-align: .9vw; }
-.cond { font-size: 2.6vw; margin-top: 1vw; }
-.minmax { font-size: 2vw; color: #b8b3a8; margin-top: .8vw; }
-.horas { margin-top: 3vw; white-space: nowrap; }
-.h1 { display: inline-block; width: 16%; text-align: center; font-size: 1.7vw; color: #b8b3a8; }
-.h1 b { display: block; font-weight: 400; color: #f2efe8; font-size: 2.1vw; margin: .5vw 0; }
-.h1 .ic { display: block; font-size: 2.4vw; margin: .3vw 0; }
-.att { font-size: 1.4vw; color: #55524d; margin-top: 2.2vw; }
+.tf-topo { font-size: 1.7vw; color: #b8b3a8; text-transform: uppercase; letter-spacing: .12em; }
+.tf-res { font-size: 2.3vw; margin: .8vw 0 1.6vw; }
+.tf-res b { font-weight: 400; }
+.tf-res .atr { color: #e5483b; }
+.tf-lista { margin: 0; padding: 0; list-style: none; }
+.tf-item { padding: .9vw 0; border-top: 1px solid #1f1f1f; font-size: 1.9vw; line-height: 1.3; }
+.tf-item .tit { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tf-item .meta { display: block; font-size: 1.45vw; color: #8a857c; margin-top: .25vw; }
+.tf-item .ponto { display: inline-block; width: .9vw; height: .9vw; border-radius: 50%; margin-right: .8vw; background: #55524d; vertical-align: .2vw; }
+.tf-item.alta .ponto { background: #e5483b; }
+.tf-item.media .ponto { background: #f2a33a; }
+.tf-item.atrasada .meta .quando { color: #e5483b; }
+.tf-mais { font-size: 1.5vw; color: #6f6c66; margin-top: 1vw; }
+.tf-att { font-size: 1.3vw; color: #55524d; margin-top: 1.4vw; }
 
 /* Chip de timer em andamento */
 .chip { position: absolute; top: 14px; right: 16px; z-index: 5; background: #2a2219; color: #f2a33a; border-radius: 999px; padding: 10px 18px; font-size: 22px; font-weight: 400; display: none; }
@@ -85,8 +90,11 @@ button.alerta { background: #e5483b; color: #fff; }
 
 /* Modo noturno: vermelho escuro, como as telas de cabeceira */
 body.noite #v-relogio { color: #8f2a22; }
-body.noite .data, body.noite .minmax, body.noite .h1, body.noite .cond { color: #6e2019; }
-body.noite .h1 b, body.noite .hora .seg { color: #8f2a22; }
+body.noite .data, body.noite .tf-topo, body.noite .tf-item .meta { color: #6e2019; }
+body.noite .hora .seg { color: #8f2a22; }
+body.noite .tf-item { border-color: #1a0705; }
+body.noite .tf-item .ponto { background: #5a1a15; }
+body.noite .tf-res .atr, body.noite .tf-item.atrasada .meta .quando { color: #b0352b; }
 body.noite .rel-dir { border-color: #2a0d0a; }
 body.noite .nav button { color: #4a1612; }
 body.noite .nav button.ativa { color: #8f2a22; background: #140605; }
@@ -113,14 +121,13 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
 @media (orientation: portrait) {
   .cl-resp { top: 30vw; }
   .cl-topo h2 { font-size: 5vw; }
-  .rel { display: block; padding-top: 8vh; }
+  .rel { display: block; padding-top: 4vh; }
   .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
   .hora { font-size: 26vw; }
   .data { font-size: 4.4vw; }
-  .temp { font-size: 13vw; } .temp .ic { font-size: 7vw; }
-  .cond { font-size: 4vw; } .minmax { font-size: 3vw; }
-  .h1 { font-size: 2.6vw; } .h1 b { font-size: 3.2vw; } .h1 .ic { font-size: 3.6vw; }
-  .att { font-size: 2.2vw; }
+  .tf-topo { font-size: 2.6vw; } .tf-res { font-size: 3.6vw; }
+  .tf-item { font-size: 3vw; } .tf-item .meta { font-size: 2.3vw; } .tf-item .ponto { width: 1.4vw; height: 1.4vw; }
+  .tf-mais, .tf-att { font-size: 2.2vw; }
   .tm { display: block; }
   .tm-col { margin: 0 0 2vw; }
   .tm-num { font-size: 16vw; } .tm-tit { font-size: 3vw; }
@@ -142,11 +149,11 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
       <div class="data" id="data"></div>
     </div>
     <div class="rel-dir">
-      <div class="temp"><span class="ic" id="w-ic"></span><span id="w-temp">--°</span></div>
-      <div class="cond" id="w-cond">Carregando previsão…</div>
-      <div class="minmax" id="w-mm"></div>
-      <div class="horas" id="w-horas"></div>
-      <div class="att" id="w-att">Fortaleza</div>
+      <div class="tf-topo">Minhas pendências</div>
+      <div class="tf-res" id="tf-res">Carregando…</div>
+      <ul class="tf-lista" id="tf-lista"></ul>
+      <div class="tf-mais" id="tf-mais"></div>
+      <div class="tf-att" id="tf-att"></div>
     </div>
   </div>
 </section>
@@ -297,67 +304,73 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     document.body.classList.toggle('noite', h >= 22 || h < 6);
   }
 
-  // ---------- Previsão do tempo (arquivo gerado de hora em hora pelo GitHub) ----------
-  var COND = {
-    0: ['Céu limpo', 'sol'], 1: ['Predomínio de sol', 'sol'], 2: ['Parcialmente nublado', 'parc'], 3: ['Nublado', 'nuvem'],
-    45: ['Neblina', 'nuvem'], 48: ['Neblina', 'nuvem'],
-    51: ['Garoa fraca', 'chuva'], 53: ['Garoa', 'chuva'], 55: ['Garoa forte', 'chuva'], 56: ['Garoa', 'chuva'], 57: ['Garoa', 'chuva'],
-    61: ['Chuva fraca', 'chuva'], 63: ['Chuva', 'chuva'], 65: ['Chuva forte', 'chuva'], 66: ['Chuva', 'chuva'], 67: ['Chuva forte', 'chuva'],
-    80: ['Pancadas fracas', 'chuva'], 81: ['Pancadas de chuva', 'chuva'], 82: ['Pancadas fortes', 'chuva'],
-    95: ['Trovoadas', 'raio'], 96: ['Trovoadas com granizo', 'raio'], 99: ['Trovoadas com granizo', 'raio']
-  };
-  function icone(code, dia) {
-    var t = (COND[code] || ['', 'nuvem'])[1];
-    if (t === 'sol') return dia ? '☀︎' : '☾︎';
-    if (t === 'parc') return dia ? '⛅︎' : '☁︎';
-    if (t === 'chuva') return '☂︎';
-    if (t === 'raio') return '⚡︎';
-    return '☁︎';
-  }
-  function horaLocal(iso) { return parseInt(iso.substr(11, 2), 10); }
-
-  function mostrarTempo(w) {
-    var c = w.current, dd = w.daily, hh = w.hourly;
-    var dia = c.is_day === 1;
-    $('w-ic').textContent = icone(c.weather_code, dia);
-    $('w-temp').textContent = Math.round(c.temperature_2m) + '°';
-    $('w-cond').textContent = (COND[c.weather_code] || ['—'])[0] + ' · sensação ' + Math.round(c.apparent_temperature) + '°';
-    $('w-mm').textContent = 'Máx ' + Math.round(dd.temperature_2m_max[0]) + '°  ·  Mín ' + Math.round(dd.temperature_2m_min[0]) +
-      '°  ·  Chuva ' + (dd.precipitation_probability_max[0] == null ? '—' : dd.precipitation_probability_max[0] + '%');
-
-    var alvo = c.time.substr(0, 13) + ':00', i = hh.time.indexOf(alvo), box = $('w-horas');
-    box.innerHTML = '';
-    if (i >= 0) {
-      for (var n = 1; n <= 6 && i + n < hh.time.length; n++) {
-        var j = i + n, h = horaLocal(hh.time[j]), el = document.createElement('div');
-        el.className = 'h1';
-        var s1 = document.createElement('span'); s1.textContent = h + 'h';
-        var s2 = document.createElement('span'); s2.className = 'ic'; s2.textContent = icone(hh.weather_code[j], h >= 6 && h < 18);
-        var s3 = document.createElement('b'); s3.textContent = Math.round(hh.temperature_2m[j]) + '°';
-        var s4 = document.createElement('span'); s4.textContent = hh.precipitation_probability[j] == null ? '' : hh.precipitation_probability[j] + '%';
-        el.appendChild(s1); el.appendChild(s2); el.appendChild(s3); el.appendChild(s4);
-        box.appendChild(el);
-      }
+  // ---------- Pendências (Central de Tarefas, via Apps Script na Google Agenda) ----------
+  // Endereço em config.json ("tarefasUrl"); a chave fica só neste iPad (localStorage).
+  var tfUrl = '', TF_MAX = 7;
+  var DIAS_C = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  function lerChaveTf() { try { return localStorage.getItem('bancada-chave-tarefas') || ''; } catch (e) { return ''; } }
+  function gravarChaveTf(c) { try { localStorage.setItem('bancada-chave-tarefas', c); } catch (e) {} }
+  function tfAviso(t) { $('tf-res').textContent = t; $('tf-lista').innerHTML = ''; $('tf-mais').textContent = ''; }
+  function tfQuando(t, hoje) {
+    if (t.situacao === 'atrasada') {
+      var p = t.dia.split('-'), h = hoje.split('-');
+      var dias = Math.round((Date.UTC(+h[0], +h[1] - 1, +h[2]) - Date.UTC(+p[0], +p[1] - 1, +p[2])) / 86400000);
+      return 'atrasada ' + dias + (dias === 1 ? ' dia' : ' dias');
     }
-    // c.time é a hora local de Fortaleza (UTC−3), no formato AAAA-MM-DDTHH:MM
-    var p = c.time.match(/\d+/g);
-    var quando = Date.UTC(+p[0], +p[1] - 1, +p[2], +p[3] + 3, +p[4]);
-    var idadeH = (Date.now() - quando) / 3600000;
-    $('w-att').textContent = 'Fortaleza · atualizado às ' + c.time.substr(11, 5) + (idadeH > 3 ? ' · previsão atrasada' : '');
+    if (t.situacao === 'hoje') return 'hoje' + (t.hora ? ' ' + t.hora : '');
+    var q = t.dia.split('-'), d = new Date(+q[0], +q[1] - 1, +q[2]);
+    return DIAS_C[d.getDay()] + ' ' + q[2] + '/' + q[1] + (t.hora ? ' ' + t.hora : '');
   }
-
-  function buscarTempo() {
+  function mostrarTarefas(r) {
+    var ts = r.tarefas || [], na = 0, nh = 0, ns = 0;
+    ts.forEach(function (t) { if (t.situacao === 'atrasada') na++; else if (t.situacao === 'hoje') nh++; else ns++; });
+    var res = $('tf-res'); res.innerHTML = '';
+    if (!ts.length) { res.textContent = 'Nada pendente. 🎉'; }
+    else {
+      if (na) { var a = document.createElement('b'); a.className = 'atr'; a.textContent = na + (na === 1 ? ' atrasada' : ' atrasadas'); res.appendChild(a); res.appendChild(document.createTextNode(' · ')); }
+      var b = document.createElement('b'); b.textContent = nh + ' hoje'; res.appendChild(b);
+      res.appendChild(document.createTextNode(' · ' + ns + ' na semana'));
+    }
+    var ul = $('tf-lista'); ul.innerHTML = '';
+    var max = window.innerHeight > window.innerWidth ? 5 : TF_MAX;
+    ts.slice(0, max).forEach(function (t) {
+      var li = document.createElement('li');
+      var pr = (t.prioridade || '').toLowerCase().replace('é', 'e');
+      li.className = 'tf-item ' + pr + ' ' + t.situacao;
+      var tit = document.createElement('span'); tit.className = 'tit';
+      var pt = document.createElement('span'); pt.className = 'ponto';
+      tit.appendChild(pt); tit.appendChild(document.createTextNode(t.titulo));
+      var meta = document.createElement('span'); meta.className = 'meta';
+      var q = document.createElement('span'); q.className = 'quando'; q.textContent = tfQuando(t, r.hoje);
+      meta.appendChild(q); meta.appendChild(document.createTextNode(' · ' + t.frente + ' · ' + t.prioridade));
+      li.appendChild(tit); li.appendChild(meta); ul.appendChild(li);
+    });
+    $('tf-mais').textContent = ts.length > max ? '+ ' + (ts.length - max) + ' na lista completa' : '';
+    $('tf-att').textContent = 'Central de Tarefas · atualizado às ' + r.atualizado;
+  }
+  function buscarTarefas() {
+    if (!tfUrl) { tfAviso('Lista de tarefas ainda não configurada.'); return; }
+    var chave = lerChaveTf();
+    if (!chave) { tfAviso('Toque aqui para digitar a chave das tarefas.'); return; }
     var x = new XMLHttpRequest();
-    x.open('GET', 'weather.json?t=' + Date.now(), true);
+    x.open('GET', tfUrl + (tfUrl.indexOf('?') < 0 ? '?' : '&') + 'chave=' + encodeURIComponent(chave) + '&t=' + Date.now(), true);
+    x.timeout = 60000;
     x.onreadystatechange = function () {
       if (x.readyState !== 4) return;
-      if (x.status === 200) {
-        try { mostrarTempo(JSON.parse(x.responseText)); return; } catch (e) {}
-      }
-      if ($('w-temp').textContent === '--°') $('w-cond').textContent = 'Previsão indisponível no momento';
+      var r = null;
+      try { r = JSON.parse(x.responseText); } catch (e) {}
+      if (r && r.erro === 'chave') { gravarChaveTf(''); tfAviso('Chave errada. Toque aqui para digitar de novo.'); return; }
+      if (r && r.tarefas) { mostrarTarefas(r); return; }
+      if ($('tf-res').textContent === 'Carregando…') tfAviso('Não consegui carregar as tarefas agora.');
+      $('tf-att').textContent = 'Sem conexão com a Central de Tarefas · tentando de novo em 10 min';
     };
     x.send();
   }
+  toque($('tf-res'), function () {
+    if (lerChaveTf() && $('tf-res').textContent.indexOf('Toque') < 0) return buscarTarefas();
+    var c = window.prompt('Chave das tarefas (a mesma do Apps Script):', '');
+    if (c) { gravarChaveTf(c.replace(/^\s+|\s+$/g, '')); $('tf-res').textContent = 'Carregando…'; buscarTarefas(); }
+  });
 
   // ---------- Timer ----------
   var tDur = 5 * 60000, tFim = 0, tResta = tDur, tRodando = false, tTocando = false, tBipTimer = null;
@@ -562,17 +575,18 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     x.open('GET', 'config.json?t=' + Date.now(), true);
     x.onreadystatechange = function () {
       if (x.readyState !== 4) return;
-      try { clUrl = JSON.parse(x.responseText).claudeUrl || ''; } catch (e) {}
+      try { var cfg = JSON.parse(x.responseText); clUrl = cfg.claudeUrl || ''; tfUrl = cfg.tarefasUrl || ''; } catch (e) {}
+      buscarTarefas();
     };
     x.send();
     if (!lerSenha()) clMostrarConfig(true);
   })();
 
   // ---------- Laços ----------
-  relogio(); tMostrar(); cMostrar(); buscarTempo(); buscarReceitas();
+  relogio(); tMostrar(); cMostrar(); buscarReceitas();
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
-  setInterval(buscarTempo, 15 * 60000);
+  setInterval(buscarTarefas, 10 * 60000);
   // Recarrega a página a cada 6 h (pega receitas e melhorias novas), só se nada estiver em uso
   setInterval(function () {
     if (!tRodando && !tTocando && !cRodando && vistaAtual === 'v-relogio') location.reload();

@@ -15,8 +15,8 @@ O iPad faz o mesmo em JavaScript para ler.
 import base64, datetime, hashlib, hmac, json, os, re, sys
 
 FUSO = datetime.timezone(datetime.timedelta(hours=-3))  # America/Fortaleza
-# Só Pessoal até o Níkolas autorizar publicar (criptografadas) as frentes de empresa.
-FRENTES = ['Pessoal']
+# Todas as frentes (publicação criptografada autorizada pelo Níkolas em 12/11/2026).
+FRENTES = ['Pessoal', 'XSEG', 'NEXACORE', 'TAP']
 
 
 def eventos_de(obj):

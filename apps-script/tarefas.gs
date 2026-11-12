@@ -37,7 +37,7 @@ function doGet(e) {
     var desc = (ev.getDescription() || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
     if (desc.indexOf('Central de Tarefas') < 0) return;
     var titulo = (ev.getTitle() || '').trim();
-    if (titulo.indexOf('✅') === 0) return;
+    if (titulo.indexOf('✅') === 0 || titulo.toUpperCase().indexOf('[DUPLICADO') === 0) return;
 
     var dia = Utilities.formatDate(ev.getStartTime(), FUSO, 'yyyy-MM-dd');
     if (dia > limite) return;

@@ -54,7 +54,10 @@ button.alerta { background: #e5483b; color: #fff; }
 .pd h2 { margin: 0; font-size: 3.4vw; font-weight: 200; }
 .pd-res { font-size: 2.2vw; color: #b8b3a8; margin: .6vw 0 0; }
 .pd-res .atr { color: #e5483b; }
-.pd-lista { position: absolute; top: 16vw; left: 4vw; right: 4vw; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 2vw; }
+.pd-lista { position: absolute; top: 21vw; left: 4vw; right: 4vw; bottom: 0; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 2vw; }
+.pd-filtro { margin-top: .8vw; white-space: nowrap; overflow: hidden; }
+.pd-filtro button { font-size: 17px; padding: 8px 14px; margin-right: 6px; border-radius: 999px; }
+.pd-filtro button.on { background: #f2a33a; color: #1a1205; }
 .pd-grupo { font-size: 1.7vw; color: #8a857c; text-transform: uppercase; letter-spacing: .12em; margin: 2vw 0 .6vw; }
 .pd-item { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; background: #111; border-radius: 16px; padding: 1.4vw 1.8vw; margin-bottom: 1vw; }
 .pd-txt { -webkit-flex: 1; flex: 1; min-width: 0; padding-right: 1.6vw; }
@@ -166,7 +169,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   .rel { display: block; padding-top: 4vh; }
   .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
   .hora { font-size: 24vw; }
-  .pd h2 { font-size: 5vw; } .pd-res { font-size: 3.2vw; } .pd-lista { top: 23vw; }
+  .pd h2 { font-size: 5vw; } .pd-res { font-size: 3.2vw; } .pd-lista { top: 30vw; }
   .pd-tit { font-size: 3.4vw; } .pd-meta, .pd-nota { font-size: 2.4vw; } .pd-grupo { font-size: 2.5vw; }
   .data { font-size: 4.4vw; }
   .tf-topo { font-size: 2.6vw; } .tf-res { font-size: 3.6vw; }
@@ -274,6 +277,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     <h2>Minhas pendências</h2>
     <p class="pd-res" id="pd-res"></p>
     <p class="pd-res" id="pd-pomo"></p>
+    <div class="pd-filtro" id="pd-filtro"></div>
     <div class="pd-lista" id="pd-lista"></div>
     <div class="pd-desfazer" id="pd-desfazer"><span id="pd-desf-txt">Concluída.</span><b>Desfazer</b></div>
   </div>
@@ -527,7 +531,22 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     $('tf-att').textContent = 'Central de Tarefas · atualizado ' + (tfDados.atualizado.length > 5 ? 'em ' : 'às ') + tfDados.atualizado;
     desenharPendencias(ts);
   }
-  function desenharPendencias(ts) {
+  var filtroFrente = '';
+  function desenharFiltro(todas) {
+    var box = $('pd-filtro'); box.innerHTML = '';
+    var cont = {}; todas.forEach(function (t) { cont[t.frente] = (cont[t.frente] || 0) + 1; });
+    [['', 'Todas', todas.length], ['Pessoal', 'Pessoal'], ['XSEG', 'XSEG'], ['NEXACORE', 'NEXACORE'], ['TAP', 'TAP']].forEach(function (f) {
+      var n = f[0] ? (cont[f[0]] || 0) : f[2];
+      if (f[0] && !n) return;
+      var b = document.createElement('button'); b.textContent = f[1] + ' ' + n;
+      if (filtroFrente === f[0]) b.className = 'on';
+      toque(b, function () { filtroFrente = f[0]; desenharTarefas(); });
+      box.appendChild(b);
+    });
+  }
+  function desenharPendencias(todas) {
+    desenharFiltro(todas);
+    var ts = filtroFrente ? todas.filter(function (t) { return t.frente === filtroFrente; }) : todas;
     resumo($('pd-res'), ts);
     var box = $('pd-lista'), topo = box.scrollTop; box.innerHTML = '';
     var grupos = [['atrasada', 'Atrasadas'], ['hoje', 'Hoje'], ['semana', 'Próximos 7 dias']];

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Gera tarefas.enc.json (pendências pessoais criptografadas) para a tela do iPad.
+"""Gera tarefas.enc.json (pendências da Central de Tarefas, criptografadas) para a tela do iPad.
 
 Uso: python3 tools/cifrar_tarefas.py eventos.json CHAVE [saida]
 
 eventos.json = lista de eventos da Google Agenda (formato da ferramenta
 list_events: summary, description, start, end), ou um objeto com "events",
 ou uma lista desses objetos (páginas). Só entram eventos da Central de
-Tarefas, frente Pessoal, não concluídos (sem ✅), de hoje−30 a hoje+7.
+Tarefas (todas as frentes), não concluídos (sem ✅), de hoje−30 a hoje+7.
 
 Cifra: chave = SHA-256(CHAVE); fluxo = SHA-256(chave‖nonce‖contador) em
 blocos; ct = texto XOR fluxo; mac = HMAC-SHA-256(chave, nonce‖ct).
@@ -15,7 +15,7 @@ O iPad faz o mesmo em JavaScript para ler.
 import base64, datetime, hashlib, hmac, json, os, re, sys
 
 FUSO = datetime.timezone(datetime.timedelta(hours=-3))  # America/Fortaleza
-FRENTES = ['Pessoal']
+FRENTES = ['Pessoal', 'XSEG', 'NEXACORE', 'TAP']
 
 
 def eventos_de(obj):
@@ -111,7 +111,7 @@ def main():
     dados = montar(eventos, datetime.datetime.now(FUSO))
     with open(saida, 'w', encoding='utf-8') as f:
         json.dump(cifrar(dados, chave), f)
-    print('eventos lidos:', len(eventos), '| tarefas pessoais publicadas:', len(dados['tarefas']))
+    print('eventos lidos:', len(eventos), '| tarefas publicadas:', len(dados['tarefas']))
 
 
 if __name__ == '__main__':

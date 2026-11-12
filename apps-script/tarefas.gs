@@ -18,7 +18,7 @@
 var CHAVE = 'TROQUE-ESTA-CHAVE';
 var FUSO = 'America/Fortaleza';
 // Frentes que aparecem na tela. Para ver tudo: ['Pessoal', 'XSEG', 'NEXACORE', 'TAP'].
-var FRENTES = ['Pessoal'];
+var FRENTES = ['Pessoal', 'XSEG', 'NEXACORE', 'TAP'];
 
 function doGet(e) {
   var p = (e && e.parameter) || {};

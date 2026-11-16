@@ -35,6 +35,26 @@ button.alerta { background: #e5483b; color: #fff; }
 .hora { font-size: 14.5vw; font-weight: 100; line-height: .9; letter-spacing: -.02em; white-space: nowrap; }
 .hora .seg { font-size: 4vw; color: #6f6c66; margin-left: .6vw; letter-spacing: 0; }
 .data { font-size: 3.2vw; color: #b8b3a8; margin-top: 2vw; }
+.ck-bloco { padding-bottom: 1.4vw; margin-bottom: 1.4vw; border-bottom: 1px solid #1f1f1f; }
+.temp { font-size: 5.4vw; font-weight: 200; line-height: 1; }
+.temp .ic { font-size: 3.4vw; margin-right: 1vw; vertical-align: .6vw; }
+.cond { font-size: 2vw; margin-top: .6vw; }
+.minmax { font-size: 1.6vw; color: #b8b3a8; margin-top: .4vw; }
+.horas { margin-top: 1.2vw; white-space: nowrap; }
+.h1 { display: inline-block; width: 16%; text-align: center; font-size: 1.4vw; color: #b8b3a8; }
+.h1 b { display: block; font-weight: 400; color: #f2efe8; font-size: 1.8vw; margin: .3vw 0; }
+.h1 .ic { display: block; font-size: 2vw; margin: .2vw 0; }
+.rt-btns { margin-top: .8vw; }
+.rt-btns button { font-size: 19px; padding: 12px 0; width: 30%; margin: 0 2% 8px 0; }
+.rt-ativo { margin-top: .6vw; }
+.rt-tempo { font-size: 5vw; font-weight: 100; margin-right: 1.4vw; vertical-align: middle; }
+.rt-ativo button { font-size: 18px; padding: 10px 14px; margin-right: 6px; vertical-align: middle; }
+.ck-add { float: right; font-size: 16px; padding: 6px 12px; text-transform: none; letter-spacing: 0; background: #2a2219; color: #f2a33a; }
+.cp-lista { list-style: none; margin: .8vw 0 0; padding: 0; }
+.cp-lista li { font-size: 2vw; padding: .7vw 0; border-top: 1px solid #1a1a1a; }
+.cp-lista li:before { content: "○  "; color: #6f6c66; }
+.cp-lista li.feito { color: #55524d; text-decoration: line-through; }
+.cp-lista li.feito:before { content: "●  "; }
 .tf-topo { font-size: 1.7vw; color: #b8b3a8; text-transform: uppercase; letter-spacing: .12em; }
 .tf-res { font-size: 2.3vw; margin: .8vw 0 1.6vw; }
 .tf-res b { font-weight: 400; }
@@ -135,7 +155,9 @@ button.alerta { background: #e5483b; color: #fff; }
 
 /* Modo noturno: vermelho escuro, como as telas de cabeceira */
 body.noite #v-relogio { color: #8f2a22; }
-body.noite .data, body.noite .tf-topo, body.noite .tf-item .meta { color: #6e2019; }
+body.noite .data, body.noite .tf-topo, body.noite .tf-item .meta, body.noite .minmax, body.noite .h1, body.noite .cond, body.noite .tf-att { color: #6e2019; }
+body.noite .h1 b { color: #8f2a22; }
+body.noite .ck-bloco, body.noite .cp-lista li { border-color: #1a0705; }
 body.noite .hora .seg { color: #8f2a22; }
 body.noite .tf-item { border-color: #1a0705; }
 body.noite .tf-item .ponto { background: #5a1a15; }
@@ -166,13 +188,16 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
 @media (orientation: portrait) {
   .cl-resp { top: 30vw; }
   .cl-topo h2 { font-size: 5vw; }
-  .rel { display: block; padding-top: 4vh; }
-  .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 4vh 0 0; margin-top: 4vh; }
-  .hora { font-size: 24vw; }
+  .rel { display: block; padding-top: 1vh; }
+  .rel-dir { border-left: 0; border-top: 1px solid #262626; padding: 2vh 0 0; margin-top: 2vh; }
+  .hora { font-size: 19vw; }
   .pd h2 { font-size: 5vw; } .pd-res { font-size: 3.2vw; } .pd-lista { top: 30vw; }
   .pd-tit { font-size: 3.4vw; } .pd-meta, .pd-nota { font-size: 2.4vw; } .pd-grupo { font-size: 2.5vw; }
   .data { font-size: 4.4vw; }
   .tf-topo { font-size: 2.6vw; } .tf-res { font-size: 3.6vw; }
+  .temp { font-size: 8vw; } .temp .ic { font-size: 5vw; } .cond { font-size: 3.2vw; } .minmax { font-size: 2.6vw; }
+  .h1 { font-size: 2.3vw; } .h1 b { font-size: 2.9vw; } .h1 .ic { font-size: 3.2vw; }
+  .rt-tempo { font-size: 8vw; } .cp-lista li { font-size: 3.2vw; }
   .tf-item { font-size: 3vw; } .tf-item .meta { font-size: 2.3vw; } .tf-item .ponto { width: 1.4vw; height: 1.4vw; }
   .tf-mais, .tf-att { font-size: 2.2vw; }
   .tm { display: block; }
@@ -225,12 +250,29 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
         <div class="pomo-tempo" id="pomo-tempo">25:00</div>
         <div class="pomo-btns"><button id="pomo-pausa">Pausar</button><button id="pomo-trocar">Trocar atividade</button><button id="pomo-fim">Encerrar</button></div>
       </div>
-      <div class="tf-topo">Minhas pendências</div>
-      <div class="tf-res" id="tf-res">Carregando…</div>
-      <ul class="tf-lista" id="tf-lista"></ul>
-      <div class="tf-mais" id="tf-mais"></div>
-      <div class="tf-att" id="tf-att"></div>
-      <div class="pomo-stats" id="pomo-stats"></div>
+      <div class="ck-bloco">
+        <div class="temp"><span class="ic" id="w-ic"></span><span id="w-temp">--°</span></div>
+        <div class="cond" id="w-cond">Carregando previsão…</div>
+        <div class="minmax" id="w-mm"></div>
+        <div class="horas" id="w-horas"></div>
+      </div>
+      <div class="ck-bloco">
+        <div class="tf-topo">Timer rápido</div>
+        <div class="rt-ativo" id="rt-ativo" hidden>
+          <span class="rt-tempo" id="rt-tempo">0:00</span>
+          <button id="rt-pausa">Pausar</button><button id="rt-parar">Parar</button>
+        </div>
+        <div class="rt-btns" id="rt-btns"></div>
+      </div>
+      <div class="ck-bloco">
+        <div class="tf-topo">Lista de compras <button class="ck-add" id="cp-add">+ Adicionar</button></div>
+        <ul class="cp-lista" id="cp-lista"></ul>
+        <div class="tf-att" id="cp-rodape"></div>
+      </div>
+      <div class="tf-att" id="w-att">Fortaleza</div>
+      <div hidden>
+        <div id="tf-res"></div><ul id="tf-lista"></ul><div id="tf-mais"></div><div id="tf-att"></div><div id="pomo-stats"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -413,6 +455,90 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     document.body.classList.toggle('noite', h >= 22 || h < 6);
     if (typeof verificarAlarme === 'function') verificarAlarme(d);
   }
+
+  // ---------- Previsão do tempo (weather.json, gerado de hora em hora pelo GitHub) ----------
+  var COND = {
+    0: ['Céu limpo', 'sol'], 1: ['Predomínio de sol', 'sol'], 2: ['Parcialmente nublado', 'parc'], 3: ['Nublado', 'nuvem'],
+    45: ['Neblina', 'nuvem'], 48: ['Neblina', 'nuvem'],
+    51: ['Garoa fraca', 'chuva'], 53: ['Garoa', 'chuva'], 55: ['Garoa forte', 'chuva'], 56: ['Garoa', 'chuva'], 57: ['Garoa', 'chuva'],
+    61: ['Chuva fraca', 'chuva'], 63: ['Chuva', 'chuva'], 65: ['Chuva forte', 'chuva'], 66: ['Chuva', 'chuva'], 67: ['Chuva forte', 'chuva'],
+    80: ['Pancadas fracas', 'chuva'], 81: ['Pancadas de chuva', 'chuva'], 82: ['Pancadas fortes', 'chuva'],
+    95: ['Trovoadas', 'raio'], 96: ['Trovoadas com granizo', 'raio'], 99: ['Trovoadas com granizo', 'raio']
+  };
+  function icone(code, dia) {
+    var t = (COND[code] || ['', 'nuvem'])[1];
+    if (t === 'sol') return dia ? '\u2600\uFE0E' : '\u263E\uFE0E';
+    if (t === 'parc') return dia ? '\u26C5\uFE0E' : '\u2601\uFE0E';
+    if (t === 'chuva') return '\u2602\uFE0E';
+    if (t === 'raio') return '\u26A1\uFE0E';
+    return '\u2601\uFE0E';
+  }
+  function mostrarTempo(w) {
+    var c = w.current, dd = w.daily, hh = w.hourly;
+    $('w-ic').textContent = icone(c.weather_code, c.is_day === 1);
+    $('w-temp').textContent = Math.round(c.temperature_2m) + '°';
+    $('w-cond').textContent = (COND[c.weather_code] || ['—'])[0] + ' · sensação ' + Math.round(c.apparent_temperature) + '°';
+    $('w-mm').textContent = 'Máx ' + Math.round(dd.temperature_2m_max[0]) + '°  ·  Mín ' + Math.round(dd.temperature_2m_min[0]) +
+      '°  ·  Chuva ' + (dd.precipitation_probability_max[0] == null ? '—' : dd.precipitation_probability_max[0] + '%');
+    var alvo = c.time.substr(0, 13) + ':00', i = hh.time.indexOf(alvo), box = $('w-horas');
+    box.innerHTML = '';
+    if (i >= 0) {
+      for (var n = 1; n <= 6 && i + n < hh.time.length; n++) {
+        var j = i + n, h = parseInt(hh.time[j].substr(11, 2), 10), el = document.createElement('div');
+        el.className = 'h1';
+        var s1 = document.createElement('span'); s1.textContent = h + 'h';
+        var s2 = document.createElement('span'); s2.className = 'ic'; s2.textContent = icone(hh.weather_code[j], h >= 6 && h < 18);
+        var s3 = document.createElement('b'); s3.textContent = Math.round(hh.temperature_2m[j]) + '°';
+        var s4 = document.createElement('span'); s4.textContent = hh.precipitation_probability[j] == null ? '' : hh.precipitation_probability[j] + '%';
+        el.appendChild(s1); el.appendChild(s2); el.appendChild(s3); el.appendChild(s4);
+        box.appendChild(el);
+      }
+    }
+    var p = c.time.match(/\d+/g);
+    var idadeH = (Date.now() - Date.UTC(+p[0], +p[1] - 1, +p[2], +p[3] + 3, +p[4])) / 3600000;
+    $('w-att').textContent = 'Fortaleza · previsão das ' + c.time.substr(11, 5) + (idadeH > 3 ? ' · atrasada' : '');
+  }
+  function buscarTempo() {
+    var x = new XMLHttpRequest();
+    x.open('GET', 'weather.json?t=' + Date.now(), true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      if (x.status === 200) { try { mostrarTempo(JSON.parse(x.responseText)); return; } catch (e) {} }
+      if ($('w-temp').textContent === '--°') $('w-cond').textContent = 'Previsão indisponível no momento';
+    };
+    x.send();
+  }
+
+  // ---------- Lista de compras (salva só neste iPad) ----------
+  function lerCompras() { try { return JSON.parse(localStorage.getItem('bancada-compras') || '[]'); } catch (e) { return []; } }
+  function gravarCompras(l) { try { localStorage.setItem('bancada-compras', JSON.stringify(l)); } catch (e) {} }
+  function desenharCompras() {
+    var l = lerCompras(), ul = $('cp-lista'), max = window.innerHeight > window.innerWidth ? 3 : 5;
+    ul.innerHTML = '';
+    var abertos = l.filter(function (x) { return !x.feito; }), feitos = l.filter(function (x) { return x.feito; });
+    var mostrar = abertos.concat(feitos).slice(0, max);
+    mostrar.forEach(function (x) {
+      var li = document.createElement('li'); li.textContent = x.t; if (x.feito) li.className = 'feito';
+      toque(li, function () { x.feito = !x.feito; gravarCompras(l); desenharCompras(); });
+      ul.appendChild(li);
+    });
+    var rod = $('cp-rodape'); rod.innerHTML = '';
+    if (!l.length) { rod.textContent = 'Lista vazia. Toque em + Adicionar.'; return; }
+    var info = abertos.length + (abertos.length === 1 ? ' item' : ' itens') + (l.length > max ? ' · ' + (l.length - max) + ' fora da tela' : '');
+    rod.appendChild(document.createTextNode(info));
+    if (feitos.length) {
+      var b = document.createElement('button'); b.className = 'ck-add'; b.textContent = 'Limpar comprados';
+      toque(b, function () { gravarCompras(abertos); desenharCompras(); });
+      rod.appendChild(b);
+    }
+  }
+  toque($('cp-add'), function () {
+    var t = window.prompt('Adicionar à lista de compras (separe vários com vírgula):', '');
+    if (!t) return;
+    var l = lerCompras();
+    t.split(',').forEach(function (x) { x = x.replace(/^\s+|\s+$/g, ''); if (x) l.push({ t: x, feito: false }); });
+    gravarCompras(l); desenharCompras();
+  });
 
   // ---------- Decifrar tarefas.enc.json (SHA-256 em ES5; mesmo esquema de tools/cifrar_tarefas.py) ----------
   var SHA_K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
@@ -612,8 +738,8 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     };
     x.send();
   }
-  toque($('tf-res'), function () {
-    if (lerChaveTf() && $('tf-res').textContent.indexOf('Toque') < 0) return buscarTarefas();
+  toque($('pd-res'), function () {
+    if (lerChaveTf() && $('pd-res').textContent.indexOf('Toque') < 0) return;
     var c = window.prompt('Chave das tarefas:', '');
     if (c) { gravarChaveTf(c.replace(/^\s+|\s+$/g, '')); $('tf-res').textContent = 'Carregando…'; buscarTarefas(); }
   });
@@ -630,6 +756,9 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     $('t-fase').textContent = ciclo ? (ciclo.fase === 'foco' ? 'Foco ' + ciclo.n + ' · ' + curto(nomeAtiv(ciclo.tarefa), 30) : 'Pausa ' + (ciclo.n % 4 === 0 ? 'longa (15 min)' : 'curta (5 min)')) : '';
     $('t-ciclo').className = 'ciclo' + (ciclo ? ' on' : '');
     $('t-ciclo').textContent = ciclo ? 'Encerrar pomodoro' : 'Pomodoro 25 min';
+    var ativo = !ciclo && (tRodando || r < tDur);
+    $('rt-ativo').hidden = !ativo; $('rt-btns').hidden = ativo || !!ciclo;
+    if (ativo) { $('rt-tempo').textContent = mmss(r); $('rt-pausa').textContent = tRodando ? 'Pausar' : 'Retomar'; }
     var pb = $('pomo');
     if (!ciclo) { pb.className = 'pomo'; return; }
     pb.className = 'pomo on' + (ciclo.fase === 'pausa' ? ' pausa' : '');
@@ -819,7 +948,13 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     b.textContent = m + ' min';
     toque(b, function () { tDefinir(m * 60000); });
     $('t-presets').appendChild(b);
+    var r = document.createElement('button');
+    r.textContent = m + ' min';
+    toque(r, function () { tDefinir(m * 60000); tIniciar(); });
+    $('rt-btns').appendChild(r);
   });
+  toque($('rt-pausa'), tPausarRetomar);
+  toque($('rt-parar'), function () { tDefinir(tDur); });
 
   // ---------- Alarme por horário (salvo neste iPad) ----------
   var alarme = (function () { try { return JSON.parse(localStorage.getItem('bancada-alarme')) || null; } catch (e) { return null; } })() || { h: 6, m: 30, ligado: false };
@@ -862,7 +997,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
 
   function atualizarChip() {
     var chip = $('chip');
-    var mostrar = tRodando && vistaAtual !== 'v-timer' && !(ciclo && vistaAtual === 'v-relogio');
+    var mostrar = tRodando && vistaAtual !== 'v-timer' && vistaAtual !== 'v-relogio';
     chip.classList.toggle('on', mostrar);
     if (mostrar) $('chip-t').textContent = (ciclo ? (ciclo.fase === 'foco' ? 'Foco ' : 'Pausa ') : '') + mmss(tFim - Date.now());
   }
@@ -967,10 +1102,11 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   })();
 
   // ---------- Laços ----------
-  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); mostrarPomoStats();
+  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); mostrarPomoStats(); buscarTempo(); desenharCompras();
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
   setInterval(buscarTarefas, 10 * 60000);
+  setInterval(buscarTempo, 15 * 60000);
   // Recarrega a página a cada 6 h (pega melhorias novas), só se nada estiver em uso
   setInterval(function () {
     if (!tRodando && !tTocando && !cRodando && vistaAtual === 'v-relogio') location.reload();

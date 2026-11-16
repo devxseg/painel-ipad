@@ -510,30 +510,78 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   }
 
   // ---------- Lista de compras (salva só neste iPad) ----------
-  function lerCompras() { try { return JSON.parse(localStorage.getItem('bancada-compras') || '[]'); } catch (e) { return []; } }
-  function gravarCompras(l) { try { localStorage.setItem('bancada-compras', JSON.stringify(l)); } catch (e) {} }
+  // Itens da planilha "Lista de compras (iPad)" (compras.enc.json, criptografado) + itens adicionados no iPad.
+  // O que é riscado fica salvo só neste iPad.
+  var cpPlanilha = [], cpAtualizado = '';
+  function lerJSON(k, padrao) { try { return JSON.parse(localStorage.getItem(k) || padrao); } catch (e) { return JSON.parse(padrao); } }
+  function gravarJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function lerCompras() { return lerJSON('bancada-compras', '[]'); }
+  function gravarCompras(l) { gravarJSON('bancada-compras', l); }
+  function itensCompras() {
+    var marcas = lerJSON('bancada-compras-marcas', '{}'), lista = [];
+    cpPlanilha.forEach(function (t) { if (marcas[t] !== 'x') lista.push({ t: t, feito: !!marcas[t], planilha: true }); });
+    lerCompras().forEach(function (x, i) { lista.push({ t: x.t, feito: x.feito, idx: i }); });
+    return lista;
+  }
+  function alternarCompra(x) {
+    if (x.planilha) {
+      var m = lerJSON('bancada-compras-marcas', '{}');
+      if (m[x.t]) delete m[x.t]; else m[x.t] = 1;
+      gravarJSON('bancada-compras-marcas', m);
+    } else {
+      var l = lerCompras(); if (l[x.idx]) { l[x.idx].feito = !l[x.idx].feito; gravarCompras(l); }
+    }
+    desenharCompras();
+  }
+  function limparComprados() {
+    var m = lerJSON('bancada-compras-marcas', '{}'), k;
+    for (k in m) if (m.hasOwnProperty(k)) m[k] = 'x';
+    gravarJSON('bancada-compras-marcas', m);
+    gravarCompras(lerCompras().filter(function (x) { return !x.feito; }));
+    desenharCompras();
+  }
   function desenharCompras() {
-    var l = lerCompras(), ul = $('cp-lista'), max = window.innerHeight > window.innerWidth ? 3 : 5;
+    var lista = itensCompras(), ul = $('cp-lista'), max = window.innerHeight > window.innerWidth ? 3 : 5;
     ul.innerHTML = '';
-    var abertos = l.filter(function (x) { return !x.feito; }), feitos = l.filter(function (x) { return x.feito; });
-    var mostrar = abertos.concat(feitos).slice(0, max);
-    mostrar.forEach(function (x) {
+    var abertos = lista.filter(function (x) { return !x.feito; }), feitos = lista.filter(function (x) { return x.feito; });
+    abertos.concat(feitos).slice(0, max).forEach(function (x) {
       var li = document.createElement('li'); li.textContent = x.t; if (x.feito) li.className = 'feito';
-      toque(li, function () { x.feito = !x.feito; gravarCompras(l); desenharCompras(); });
+      toque(li, function () { alternarCompra(x); });
       ul.appendChild(li);
     });
     var rod = $('cp-rodape'); rod.innerHTML = '';
-    if (!l.length) { rod.textContent = 'Lista vazia. Toque em + Adicionar.'; return; }
-    var info = abertos.length + (abertos.length === 1 ? ' item' : ' itens') + (l.length > max ? ' · ' + (l.length - max) + ' fora da tela' : '');
+    var info = lista.length
+      ? abertos.length + (abertos.length === 1 ? ' item' : ' itens') + (lista.length > max ? ' · ' + (lista.length - max) + ' fora da tela' : '')
+      : 'Lista vazia.';
+    if (cpAtualizado) info += ' · planilha de ' + cpAtualizado;
     rod.appendChild(document.createTextNode(info));
     if (feitos.length) {
       var b = document.createElement('button'); b.className = 'ck-add'; b.textContent = 'Limpar comprados';
-      toque(b, function () { gravarCompras(abertos); desenharCompras(); });
+      toque(b, limparComprados);
       rod.appendChild(b);
     }
   }
+  function buscarCompras() {
+    var chave = lerChaveTf();
+    if (!chave) return;
+    var x = new XMLHttpRequest();
+    x.open('GET', 'compras.enc.json?t=' + Date.now(), true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4 || x.status !== 200) return;
+      try {
+        var r = decifrarTarefas(JSON.parse(x.responseText), chave);
+        if (!r) return;
+        cpPlanilha = r.itens || []; cpAtualizado = r.atualizado || '';
+        var m = lerJSON('bancada-compras-marcas', '{}'), k, mudou = false;
+        for (k in m) if (m.hasOwnProperty(k) && cpPlanilha.indexOf(k) < 0) { delete m[k]; mudou = true; }
+        if (mudou) gravarJSON('bancada-compras-marcas', m);
+        desenharCompras();
+      } catch (e) {}
+    };
+    x.send();
+  }
   toque($('cp-add'), function () {
-    var t = window.prompt('Adicionar à lista de compras (separe vários com vírgula):', '');
+    var t = window.prompt('Adicionar à lista (só neste iPad; separe vários com vírgula):', '');
     if (!t) return;
     var l = lerCompras();
     t.split(',').forEach(function (x) { x = x.replace(/^\s+|\s+$/g, ''); if (x) l.push({ t: x, feito: false }); });
@@ -1102,11 +1150,12 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   })();
 
   // ---------- Laços ----------
-  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); mostrarPomoStats(); buscarTempo(); desenharCompras();
+  relogio(); tMostrar(); cMostrar(); mostrarAlarme(); mostrarPomoStats(); buscarTempo(); desenharCompras(); buscarCompras();
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
   setInterval(buscarTarefas, 10 * 60000);
   setInterval(buscarTempo, 15 * 60000);
+  setInterval(buscarCompras, 30 * 60000);
   // Recarrega a página a cada 6 h (pega melhorias novas), só se nada estiver em uso
   setInterval(function () {
     if (!tRodando && !tTocando && !cRodando && vistaAtual === 'v-relogio') location.reload();

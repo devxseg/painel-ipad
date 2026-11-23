@@ -1,4 +1,5 @@
 {
   "claudeUrl": "",
-  "tarefasUrl": "tarefas.enc.json"
+  "tarefasUrl": "tarefas.enc.json",
+  "acoesUrl": ""
 }

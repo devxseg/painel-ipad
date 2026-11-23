@@ -8,3 +8,4 @@ Tela de espera para o iPad mini 1 (iOS 9). Tela inicial de cozinha: relógio, pr
 - `worker/worker.js`: intermediário para o Cloudflare Workers. Por padrão usa o Workers AI gratuito (Llama 4 Scout, ligação `AI`); se o segredo `ANTHROPIC_API_KEY` existir, usa o Claude Haiku 5.5. A senha da tela fica no segredo `SENHA`.
 - `weather.json`: previsão de Fortaleza, gerada de hora em hora pela Action `clima.yml` (dados: Open-Meteo, open-meteo.com).
 - `compras.enc.json`: lista de compras **criptografada**, gerada por `tools/cifrar_compras.py` a partir da planilha "Lista de compras (iPad)" no Google Drive (atualizada junto com as pendências). Riscar e itens adicionados no iPad ficam só no iPad.
+- `apps-script/acoes.gs`: Apps Script (conta dona da agenda) que o botão Concluir do iPad chama para colocar ✅ no evento da Central de Tarefas; endereço em `config.json` (`acoesUrl`). A chave fica só no script e no iPad.

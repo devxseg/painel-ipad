@@ -752,9 +752,54 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     desenharAcompanhamento(box);
     box.scrollTop = topo;
   }
+  // Grava a conclusão na Google Agenda pelo Apps Script (config.json: "acoesUrl").
+  // Se falhar (sem internet), guarda numa fila e tenta de novo depois.
+  var acoesUrl = '';
+  function lerFila() { try { return JSON.parse(localStorage.getItem('bancada-fila-agenda') || '[]'); } catch (e) { return []; } }
+  function gravarFila(f) { try { localStorage.setItem('bancada-fila-agenda', JSON.stringify(f)); } catch (e) {} }
+  function agendaAcao(acao, id, cb) {
+    var chave = lerChaveTf();
+    if (!acoesUrl || !id || !chave) { if (cb) cb(false); return; }
+    var x = new XMLHttpRequest();
+    x.open('GET', acoesUrl + (acoesUrl.indexOf('?') < 0 ? '?' : '&') + 'acao=' + acao + '&id=' + encodeURIComponent(id) + '&chave=' + encodeURIComponent(chave) + '&t=' + Date.now(), true);
+    x.timeout = 30000;
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      var r = null; try { r = JSON.parse(x.responseText); } catch (e) {}
+      var ok = !!(r && (r.ok || r.erro === 'nao-encontrado' || r.erro === 'fora-da-central'));
+      if (cb) cb(ok, r);
+    };
+    x.ontimeout = function () { if (cb) cb(false); };
+    x.send();
+  }
+  function enfileirar(acao, id) {
+    var f = lerFila().filter(function (q) { return q.id !== id; });
+    f.push({ acao: acao, id: id }); gravarFila(f);
+  }
+  function processarFila() {
+    var f = lerFila(); if (!f.length || !acoesUrl) return;
+    var q = f[0];
+    agendaAcao(q.acao, q.id, function (ok) {
+      if (!ok) return;
+      gravarFila(lerFila().filter(function (z) { return !(z.id === q.id && z.acao === q.acao); }));
+      processarFila();
+    });
+  }
+  function sincronizarAgenda(acao, t) {
+    if (!acoesUrl || !t.id) return;
+    agendaAcao(acao, t.id, function (ok, r) {
+      if (!ok) { enfileirar(acao, t.id); }
+      var el = $('pd-desf-txt');
+      if (el && $('pd-desfazer').classList.contains('on')) {
+        el.textContent = (acao === 'concluir' ? 'Concluída' : 'Reaberta') + (ok ? ' na Agenda ✓' : ' no iPad · a Agenda atualiza quando houver conexão');
+      }
+    });
+  }
+  var ultimaTarefa = null;
   function concluir(t) {
     var c = lerConcluidas(); c[chaveTf(t)] = Date.now(); gravarConcluidas(c);
-    ultimaConcluida = chaveTf(t);
+    ultimaConcluida = chaveTf(t); ultimaTarefa = t;
+    sincronizarAgenda('concluir', t);
     $('pd-desf-txt').textContent = 'Concluída: ' + (t.titulo.length > 40 ? t.titulo.substr(0, 40) + '…' : t.titulo);
     $('pd-desfazer').classList.add('on');
     clearTimeout(desfazerTimer);
@@ -763,6 +808,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   }
   toque($('pd-desfazer'), function () {
     var c = lerConcluidas(); delete c[ultimaConcluida]; gravarConcluidas(c);
+    if (ultimaTarefa) sincronizarAgenda('reabrir', ultimaTarefa);
     $('pd-desfazer').classList.remove('on'); desenharTarefas();
   });
   toque($('tf-mais'), function () { if (tfDados) irPara('v-pend'); });
@@ -1142,7 +1188,8 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
     x.open('GET', 'config.json?t=' + Date.now(), true);
     x.onreadystatechange = function () {
       if (x.readyState !== 4) return;
-      try { var cfg = JSON.parse(x.responseText); clUrl = cfg.claudeUrl || ''; tfUrl = cfg.tarefasUrl || ''; } catch (e) {}
+      try { var cfg = JSON.parse(x.responseText); clUrl = cfg.claudeUrl || ''; tfUrl = cfg.tarefasUrl || ''; acoesUrl = cfg.acoesUrl || ''; } catch (e) {}
+      processarFila();
       buscarTarefas();
     };
     x.send();
@@ -1154,6 +1201,7 @@ textarea, input { -webkit-user-select: text; user-select: text; font-family: inh
   setInterval(relogio, 1000);
   setInterval(function () { tTick(); if (cRodando && vistaAtual === 'v-timer') cMostrar(); }, 100);
   setInterval(buscarTarefas, 10 * 60000);
+  setInterval(processarFila, 10 * 60000);
   setInterval(buscarTempo, 15 * 60000);
   setInterval(buscarCompras, 30 * 60000);
   // Recarrega a página a cada 6 h (pega melhorias novas), só se nada estiver em uso
